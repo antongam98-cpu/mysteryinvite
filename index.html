@@ -14,7 +14,6 @@
       --shadow: 0 18px 45px rgba(0,0,0,.14);
       --shadow2: 0 10px 25px rgba(0,0,0,.12);
       --r:22px;
-      --r2:16px;
       --safe-top: env(safe-area-inset-top, 0px);
       --safe-bot: env(safe-area-inset-bottom, 0px);
     }
@@ -33,13 +32,8 @@
       position:relative;
     }
 
-    /* Soft floating emojis (not chaotic fast, but alive) */
-    .bg{
-      position:absolute; inset:0;
-      overflow:hidden;
-      pointer-events:none;
-      z-index:0;
-    }
+    /* Soft floating emojis */
+    .bg{ position:absolute; inset:0; overflow:hidden; pointer-events:none; z-index:0; }
     .float{
       position:absolute;
       filter: drop-shadow(0 10px 15px rgba(0,0,0,.10));
@@ -54,7 +48,7 @@
       100%{ transform: translate3d(0,0,0) rotate(0deg); }
     }
 
-    /* Top overlay area for toasts/modals so nothing overlaps content */
+    /* Top overlay toasts + sheet */
     .top-layer{
       position:fixed;
       left:0; right:0;
@@ -67,7 +61,6 @@
       gap:10px;
       align-items:center;
     }
-
     .toast{
       width:min(420px, calc(100vw - 28px));
       background: var(--white);
@@ -82,21 +75,10 @@
       animation: toastIn .42s cubic-bezier(.2,.9,.2,1) forwards;
       pointer-events:auto;
     }
-    @keyframes toastIn{
-      to{ transform: translateY(0); opacity:1; }
-    }
-    .toast .dot{
-      width:10px; height:10px; border-radius:999px;
-      background: var(--red);
-      margin-top:6px;
-      flex:0 0 auto;
-    }
-    .toast .t{
-      line-height:1.25;
-      font-size:14px;
-    }
+    @keyframes toastIn{ to{ transform: translateY(0); opacity:1; } }
+    .toast .dot{ width:10px; height:10px; border-radius:999px; background: var(--red); margin-top:6px; flex:0 0 auto; }
+    .toast .t{ line-height:1.25; font-size:14px; }
 
-    /* Top-sheet modal */
     .sheetWrap{
       position:fixed; inset:0;
       z-index:60;
@@ -109,7 +91,7 @@
     .sheetWrap.show{ display:flex; }
     .sheetBackdrop{
       position:absolute; inset:0;
-      background: rgba(255,45,85,.08); /* still within palette feel */
+      background: rgba(255,45,85,.08);
       pointer-events:auto;
       opacity:0;
       animation: fadeIn .25s ease forwards;
@@ -127,18 +109,10 @@
       animation: sheetIn .42s cubic-bezier(.2,.95,.2,1) forwards;
       pointer-events:auto;
     }
-    @keyframes sheetIn{
-      to{ transform: translateY(0); opacity:1; }
-    }
-    .sheet .head{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      padding-bottom:10px;
-    }
+    @keyframes sheetIn{ to{ transform: translateY(0); opacity:1; } }
+    .sheet .head{ display:flex; align-items:center; justify-content:space-between; gap:10px; padding-bottom:10px; }
     .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
+      display:inline-flex; align-items:center; gap:8px;
       background: rgba(255,45,85,.12);
       border-radius: 999px;
       padding: 8px 10px;
@@ -155,56 +129,32 @@
       font-weight:800;
       cursor:pointer;
       -webkit-tap-highlight-color: transparent;
-      transition: transform .15s ease, background .2s ease;
+      transition: transform .15s ease;
     }
     .xbtn:active{ transform: scale(.96); }
     .sheet p{ margin:0; font-size:14px; line-height:1.35; }
 
-    /* App shell */
+    /* App */
     .app{
       position:relative;
       z-index:1;
       height:100%;
       display:flex;
       flex-direction:column;
-      padding:
-        calc(18px + var(--safe-top))
-        16px
-        calc(18px + var(--safe-bot))
-        16px;
+      padding: calc(18px + var(--safe-top)) 16px calc(18px + var(--safe-bot)) 16px;
       gap:12px;
     }
 
-    /* progress dots */
     .progress{
-      display:flex;
-      justify-content:center;
-      gap:8px;
-      padding-top: 2px;
-      opacity:0;
-      transform: translateY(6px);
+      display:flex; justify-content:center; gap:8px; padding-top:2px;
+      opacity:0; transform: translateY(6px);
       animation: rise .7s ease .35s forwards;
     }
     @keyframes rise{ to{opacity:1; transform: translateY(0);} }
-    .dotp{
-      width:7px;height:7px;border-radius:999px;
-      background: rgba(255,45,85,.22);
-      transform: scale(.96);
-      transition: .3s ease;
-    }
-    .dotp.on{
-      background: var(--red);
-      transform: scale(1.18);
-      box-shadow: 0 8px 18px rgba(0,0,0,.10);
-    }
+    .dotp{ width:7px;height:7px;border-radius:999px; background: rgba(255,45,85,.22); transform: scale(.96); transition:.3s ease; }
+    .dotp.on{ background: var(--red); transform: scale(1.18); box-shadow: 0 8px 18px rgba(0,0,0,.10); }
 
-    /* stage */
-    .stage{
-      flex:1;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-    }
+    .stage{ flex:1; display:flex; align-items:center; justify-content:center; }
 
     .card{
       width:min(440px, 100%);
@@ -218,11 +168,7 @@
       opacity:0;
       animation: cardIn .7s cubic-bezier(.2,.95,.2,1) forwards;
     }
-    @keyframes cardIn{
-      to{ transform: translateY(0); opacity:1; }
-    }
-
-    /* subtle moving highlight on card */
+    @keyframes cardIn{ to{ transform: translateY(0); opacity:1; } }
     .card::before{
       content:"";
       position:absolute;
@@ -238,55 +184,31 @@
       50%{ transform: translateX(60px) translateY(12px); opacity:.55; }
     }
 
-    .title{
-      margin:0 0 6px 0;
-      font-size: 22px;
-      letter-spacing: -.2px;
-      text-align:center;
-    }
-    .sub{
-      margin:0 0 12px 0;
-      font-size: 14px;
-      text-align:center;
-      opacity:.82;
-    }
+    .title{ margin:0 0 6px 0; font-size:22px; letter-spacing:-.2px; text-align:center; }
+    .sub{ margin:0 0 12px 0; font-size:14px; text-align:center; opacity:.82; }
+    .divider{ height:1px; background: rgba(255,45,85,.14); margin: 12px 0 14px; }
 
-    .divider{
-      height:1px;
-      background: rgba(255,45,85,.14);
-      margin: 12px 0 14px;
-    }
-
-    /* buttons */
+    /* Buttons */
     .btnRow{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
     .btn{
-      border:none;
-      cursor:pointer;
-      -webkit-tap-highlight-color: transparent;
+      border:none; cursor:pointer; -webkit-tap-highlight-color: transparent;
       padding: 12px 14px;
       border-radius: 16px;
       font-weight:800;
       font-size: 14px;
       background: rgba(255,45,85,.12);
       color: rgba(0,0,0,.82);
-      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
-      position:relative;
-      overflow:hidden;
-      min-width: 132px;
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease, opacity .2s ease;
+      position:relative; overflow:hidden;
+      min-width:132px;
     }
-    .btn.primary{
-      background: var(--red);
-      color: var(--white);
-      box-shadow: 0 14px 25px rgba(0,0,0,.16);
-    }
+    .btn.primary{ background: var(--red); color: var(--white); box-shadow: 0 14px 25px rgba(0,0,0,.16); }
     .btn:active{ transform: scale(.97); }
     .btn.primary:active{ transform: scale(.975); }
-
-    /* shimmer */
+    .btn.disabledLike{ opacity:.45; pointer-events:none; }
     .btn::after{
       content:"";
-      position:absolute;
-      inset:-30% auto -30% -60%;
+      position:absolute; inset:-30% auto -30% -60%;
       width:55%;
       transform: rotate(18deg);
       background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.45), rgba(255,255,255,0));
@@ -294,24 +216,11 @@
       transition: opacity .2s ease;
     }
     .btn.primary:hover::after{ opacity:.45; animation: sweep .9s ease; }
-    @keyframes sweep{
-      from{ left:-60%; }
-      to{ left:120%; }
-    }
+    @keyframes sweep{ from{ left:-60%; } to{ left:120%; } }
 
-    /* input */
-    .field{
-      display:flex;
-      flex-direction:column;
-      gap:8px;
-      margin-top: 6px;
-    }
-    .label{
-      font-weight:800;
-      font-size: 13px;
-      text-align:center;
-      opacity:.82;
-    }
+    /* Input */
+    .field{ display:flex; flex-direction:column; gap:8px; margin-top:6px; }
+    .label{ font-weight:800; font-size:13px; text-align:center; opacity:.82; }
     input{
       width:100%;
       border: 1px solid rgba(255,45,85,.18);
@@ -328,18 +237,11 @@
       transform: translateY(-1px);
     }
 
-    /* typing text */
-    .typing{
-      min-height: 22px;
-      font-weight:800;
-      text-align:center;
-      margin-top: 2px;
-      color: rgba(0,0,0,.82);
-    }
+    /* Typing */
+    .typing{ min-height:22px; font-weight:800; text-align:center; margin-top: 6px; }
     .typing .cursor{
       display:inline-block;
-      width:8px;
-      height:14px;
+      width:8px; height:14px;
       background: rgba(255,45,85,.55);
       margin-left:6px;
       border-radius:4px;
@@ -348,7 +250,7 @@
     }
     @keyframes blink{ 50%{opacity:0;} }
 
-    /* loading runner */
+    /* Loading */
     .loaderWrap{
       margin-top: 10px;
       display:none;
@@ -357,7 +259,6 @@
       align-items:center;
     }
     .loaderWrap.show{ display:flex; }
-
     .loaderLine{
       width:100%;
       border-radius: 999px;
@@ -366,78 +267,128 @@
       overflow:hidden;
       box-shadow: 0 10px 22px rgba(0,0,0,.08);
     }
-    .bar{
-      height:100%;
-      width:0%;
-      border-radius:999px;
-      background: var(--red);
-      transition: width .08s linear;
-    }
-    .percent{
-      font-weight:900;
-      font-size: 13px;
-      opacity:.85;
-      letter-spacing:.3px;
-    }
+    .bar{ height:100%; width:0%; border-radius:999px; background: var(--red); transition: width .08s linear; }
+    .percent{ font-weight:900; font-size:13px; opacity:.85; letter-spacing:.3px; }
 
-    /* page transitions */
-    .page{
-      display:none;
-      animation: pop .45s cubic-bezier(.2,.9,.2,1);
-    }
+    /* Pages */
+    .page{ display:none; animation: pop .45s cubic-bezier(.2,.9,.2,1); }
     .page.show{ display:block; }
-    @keyframes pop{
-      from{ opacity:0; transform: translateY(10px) scale(.985); }
-      to{ opacity:1; transform: translateY(0) scale(1); }
+    @keyframes pop{ from{ opacity:0; transform: translateY(10px) scale(.985); } to{ opacity:1; transform: translateY(0) scale(1); } }
+
+    /* Activation panel (hidden until envelope opened) */
+    .panel{
+      display:none;
+      opacity:0;
+      transform: translateY(10px);
+    }
+    .panel.show{
+      display:block;
+      animation: panelIn .55s cubic-bezier(.2,.9,.2,1) forwards;
+    }
+    @keyframes panelIn{
+      to{ opacity:1; transform: translateY(0); }
     }
 
-    /* Envelope */
-    .envelopeWrap{
-      display:flex;
-      justify-content:center;
-      margin: 6px 0 10px;
-    }
-    .envelope{
-      width: min(320px, 88%);
+    /* NEW: clean “real” envelope with triangles */
+    .envelopeWrap{ display:flex; justify-content:center; margin: 8px 0 6px; }
+    .env{
+      width: min(330px, 90%);
       aspect-ratio: 16/11;
-      background: var(--white);
+      position:relative;
       border-radius: 22px;
       box-shadow: var(--shadow);
-      position:relative;
+      background: var(--white);
       overflow:hidden;
       transform: translateZ(0);
     }
-    .envShadow{
+    /* subtle inner tint (still within palette feel) */
+    .env::before{
+      content:"";
       position:absolute; inset:0;
       background: radial-gradient(closest-side at 50% -10%, rgba(255,45,85,.18), rgba(255,45,85,0) 60%);
       pointer-events:none;
     }
 
-    .envBody{
+    .env-back{
       position:absolute; inset:0;
     }
-    .envBody::before{
+
+    /* “letter” that slides a bit when opened */
+    .letter{
+      position:absolute;
+      left:10%; right:10%;
+      top:18%;
+      height:58%;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 16px 30px rgba(0,0,0,.12);
+      transform: translateY(18px);
+      opacity:.0;
+      transition: transform .7s cubic-bezier(.2,.9,.2,1), opacity .45s ease;
+    }
+    .letter::after{
       content:"";
-      position:absolute; left:0; right:0; bottom:0; top:34%;
-      background: rgba(255,45,85,.06);
+      position:absolute; left:0; right:0; top:16px;
+      height:10px;
+      background: rgba(255,45,85,.10);
+      border-radius: 10px;
+      margin: 0 14px;
     }
 
+    /* Front triangles */
+    .front{
+      position:absolute; inset:0;
+      pointer-events:none;
+    }
+    /* Bottom triangle */
+    .front .bottomTri{
+      position:absolute;
+      left:0; right:0; bottom:-2px;
+      width:0; height:0;
+      margin:auto;
+      border-left: 50% solid transparent;
+      border-right: 50% solid transparent;
+      border-top: 44% solid rgba(255,45,85,.10);
+      filter: drop-shadow(0 -8px 18px rgba(0,0,0,.06));
+    }
+    /* Left triangle */
+    .front .leftTri{
+      position:absolute;
+      left:-2px; bottom:-2px;
+      width:0; height:0;
+      border-top: 44% solid transparent;
+      border-bottom: 44% solid transparent;
+      border-right: 52% solid rgba(255,45,85,.07);
+    }
+    /* Right triangle */
+    .front .rightTri{
+      position:absolute;
+      right:-2px; bottom:-2px;
+      width:0; height:0;
+      border-top: 44% solid transparent;
+      border-bottom: 44% solid transparent;
+      border-left: 52% solid rgba(255,45,85,.07);
+    }
+
+    /* Flap triangle (opens) */
     .flap{
       position:absolute;
-      left:-15%; right:-15%;
-      top:-25%;
-      height:60%;
-      background: rgba(255,45,85,.10);
-      transform-origin: 50% 90%;
+      left:-2px; right:-2px; top:-2px;
+      width:0; height:0;
+      margin:auto;
+      border-left: 50% solid transparent;
+      border-right: 50% solid transparent;
+      border-bottom: 48% solid rgba(255,45,85,.12);
+      transform-origin: 50% 8%;
       transform: rotateX(0deg);
-      border-bottom-left-radius: 30px;
-      border-bottom-right-radius: 30px;
-      transition: transform .65s cubic-bezier(.2,.9,.2,1), opacity .35s ease;
-      box-shadow: 0 18px 30px rgba(0,0,0,.10);
+      transition: transform .85s cubic-bezier(.2,.9,.2,1), opacity .45s ease;
+      filter: drop-shadow(0 18px 22px rgba(0,0,0,.10));
     }
-    .heartSeal{
+
+    .seal{
       position:absolute;
-      left:50%; top:54%;
+      left:50%;
+      top:56%;
       transform: translate(-50%,-50%);
       width:64px; height:64px;
       border-radius: 22px;
@@ -446,40 +397,30 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size: 26px;
+      font-size:26px;
       box-shadow: 0 18px 35px rgba(0,0,0,.18);
       cursor:pointer;
       -webkit-tap-highlight-color: transparent;
       transition: transform .15s ease;
+      z-index:5;
     }
-    .heartSeal:active{ transform: translate(-50%,-50%) scale(.96); }
+    .seal:active{ transform: translate(-50%,-50%) scale(.96); }
 
-    .opened .flap{
-      transform: rotateX(160deg);
-      opacity:.85;
-    }
-    .opened .heartSeal{
-      animation: sealPulse 1.05s ease-in-out infinite;
-    }
+    .env.opened .flap{ transform: rotateX(165deg); opacity:.88; }
+    .env.opened .seal{ animation: sealPulse 1.05s ease-in-out infinite; }
+    .env.opened .letter{ transform: translateY(-6px); opacity:1; }
+
     @keyframes sealPulse{
       0%,100%{ transform: translate(-50%,-50%) scale(1); }
       50%{ transform: translate(-50%,-50%) scale(1.04); }
     }
 
-    /* No button move area */
-    .arena{
-      position:relative;
-      height: 180px;
-      margin-top: 8px;
-    }
-    .arena .btn{
-      position:absolute;
-      left:50%;
-      transform: translateX(-50%);
-    }
+    /* No button arena */
+    .arena{ position:relative; height: 180px; margin-top:8px; }
+    .arena .btn{ position:absolute; left:50%; transform: translateX(-50%); }
     .arena .btn:active{ transform: translateX(-50%) scale(.97); }
 
-    /* Stat block */
+    /* Final */
     .finalBanner{
       background: var(--red);
       color: var(--white);
@@ -496,18 +437,11 @@
       background: rgba(255,45,85,.08);
       padding: 12px 14px;
       box-shadow: 0 14px 28px rgba(0,0,0,.10);
+      text-align:center;
     }
-    .stats p{
-      margin: 8px 0;
-      font-size: 14px;
-      line-height: 1.25;
-    }
+    .stats p{ margin: 8px 0; font-size:14px; line-height:1.25; }
 
-    .timeBox{
-      margin-top: 10px;
-      display:grid;
-      gap:10px;
-    }
+    .timeBox{ margin-top:10px; display:grid; gap:10px; text-align:center; }
     .miniCard{
       background: var(--white);
       border-radius: 18px;
@@ -515,22 +449,11 @@
       box-shadow: 0 14px 28px rgba(0,0,0,.10);
     }
     .miniCard .k{ font-weight:900; font-size:13px; opacity:.85; }
-    .miniCard .v{ margin-top:4px; font-weight:900; font-size: 16px; }
+    .miniCard .v{ margin-top:4px; font-weight:900; font-size:16px; }
 
-    /* small helper */
-    .center{ text-align:center; }
-    .muted{ opacity:.75; }
-
-    /* little footer */
-    .foot{
-      text-align:center;
-      font-size: 12px;
-      opacity:.72;
-      padding-bottom: 2px;
-      transform: translateY(6px);
-      opacity:0;
-      animation: rise .7s ease .55s forwards;
-    }
+    .center{text-align:center}
+    .muted{opacity:.75}
+    .foot{ height:10px; }
   </style>
 </head>
 <body>
@@ -555,40 +478,52 @@
 
     <div class="stage">
       <div class="card">
+
+        <!-- PAGE 1 -->
         <div class="page show" id="p1">
           <h1 class="title">Маленький сюрприз 💘</h1>
           <p class="sub">Только для одной получательницы.</p>
 
           <div class="envelopeWrap">
-            <div class="envelope" id="envelope">
-              <div class="envShadow"></div>
-              <div class="envBody"></div>
+            <div class="env" id="envelope">
+              <div class="env-back"></div>
+              <div class="letter"></div>
               <div class="flap"></div>
-              <div class="heartSeal" id="seal" title="Открыть">❤️</div>
+
+              <div class="front">
+                <div class="leftTri"></div>
+                <div class="rightTri"></div>
+                <div class="bottomTri"></div>
+              </div>
+
+              <div class="seal" id="seal" title="Открыть">❤️</div>
             </div>
           </div>
 
-          <div class="typing" id="typing1"></div>
+          <!-- EVERYTHING BELOW appears ONLY after opening envelope -->
+          <div class="panel" id="activationPanel">
+            <div class="typing" id="typing1"></div>
 
-          <div class="divider"></div>
+            <div class="divider"></div>
 
-          <div class="field">
-            <div class="label">Введи имя для активации</div>
-            <input id="nameInput" inputmode="text" autocomplete="off" placeholder="Например: Амина" />
+            <div class="field">
+              <div class="label">Введи имя для активации</div>
+              <input id="nameInput" inputmode="text" autocomplete="off" placeholder="Имя" />
+            </div>
+
+            <div class="btnRow" style="margin-top:12px;">
+              <button class="btn primary" id="activateBtn">Активировать</button>
+            </div>
+
+            <div class="loaderWrap" id="loaderWrap">
+              <div class="label">Проверяется получатель…</div>
+              <div class="loaderLine"><div class="bar" id="bar"></div></div>
+              <div class="percent" id="percent">0%</div>
+            </div>
           </div>
-
-          <div class="btnRow" style="margin-top:12px;">
-            <button class="btn primary" id="activateBtn">Активировать</button>
-          </div>
-
-          <div class="loaderWrap" id="loaderWrap">
-            <div class="label">Проверяется получатель…</div>
-            <div class="loaderLine"><div class="bar" id="bar"></div></div>
-            <div class="percent" id="percent">0%</div>
-          </div>
-
         </div>
 
+        <!-- PAGE 2 -->
         <div class="page" id="p2">
           <h2 class="title" id="helloTitle">Амина, ты готова принять его? 💌</h2>
           <p class="sub">Скажи честно 🙂</p>
@@ -604,6 +539,7 @@
           <p class="center muted" style="margin:0;">Подсказка: «Да» выглядит подозрительно правильно 😏</p>
         </div>
 
+        <!-- PAGE 3 -->
         <div class="page" id="p3">
           <h2 class="title">Выбери формат внимания 💝</h2>
           <p class="sub">Как проявить заботу именно к тебе?</p>
@@ -621,6 +557,7 @@
           </div>
         </div>
 
+        <!-- PAGE 4 -->
         <div class="page" id="p4">
           <h2 class="title">Выбери способ получения 🚚</h2>
           <p class="sub">Только один вариант — но самый правильный.</p>
@@ -635,6 +572,7 @@
           </div>
         </div>
 
+        <!-- PAGE 5 -->
         <div class="page" id="p5">
           <h2 class="title">Во сколько ты будешь готова? ⏰</h2>
           <p class="sub">Выбери время на 14 февраля.</p>
@@ -654,6 +592,7 @@
           </div>
         </div>
 
+        <!-- PAGE 6 -->
         <div class="page" id="p6">
           <div class="finalBanner">✅ Подтверждено</div>
 
@@ -679,41 +618,44 @@
             <button class="btn" id="copyStats">Скопировать статистику 📋</button>
           </div>
 
-          <p class="center muted" style="margin:10px 0 0;">(Можно закрывать — всё сохранено.)</p>
+          <p class="center muted" style="margin:10px 0 0;">(Можно закрывать — и всё начнётся заново при следующем открытии.)</p>
         </div>
 
       </div>
     </div>
 
-    <div class="foot">💗 Белый • Розовый • Красный</div>
+    <div class="foot"></div>
   </div>
 
 <script>
   /***********************
-   * BACKGROUND EMOJIS
+   * RESET STATE ON OPEN
+   ***********************/
+  try{ localStorage.clear(); sessionStorage.clear(); }catch(e){}
+
+  /***********************
+   * BACKGROUND EMOJIS (+15%)
    ***********************/
   const symbols = ["❤️","🤍","🌸","🎈","🌹"];
   const bg = document.getElementById("bg");
-
   function rand(min,max){ return Math.random()*(max-min)+min; }
   function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
-  // Create floating items quickly (no long waiting)
-  const count = 16;
+  const baseCount = 16;
+  const count = Math.round(baseCount * 1.15); // +15%
   for(let i=0;i<count;i++){
     const el = document.createElement("div");
     el.className="float";
     el.textContent = pick(symbols);
 
-    const size = Math.floor(rand(18, 38)); // different sizes
+    const size = Math.floor(rand(18, 40));
     el.style.fontSize = size+"px";
-    el.style.left = rand(-5, 95)+"%";
-    el.style.top = rand(-5, 95)+"%";
+    el.style.left = rand(-6, 96)+"%";
+    el.style.top = rand(-6, 96)+"%";
 
-    // gentle drift
-    el.style.setProperty("--dx", rand(-22, 22)+"px");
-    el.style.setProperty("--dy", rand(-26, 26)+"px");
-    el.style.setProperty("--dur", rand(3.8, 6.8)+"s");
+    el.style.setProperty("--dx", rand(-24, 24)+"px");
+    el.style.setProperty("--dy", rand(-28, 28)+"px");
+    el.style.setProperty("--dur", rand(3.6, 6.6)+"s");
 
     bg.appendChild(el);
   }
@@ -727,8 +669,6 @@
     t.className="toast";
     t.innerHTML = `<div class="dot"></div><div class="t">${msg}</div>`;
     toastLayer.appendChild(t);
-
-    // auto-remove
     setTimeout(()=>{
       t.style.transition = "opacity .25s ease, transform .25s ease";
       t.style.opacity = "0";
@@ -742,7 +682,6 @@
   const sheetClose = document.getElementById("sheetClose");
   const sheetTitle = document.getElementById("sheetTitle");
   const sheetText = document.getElementById("sheetText");
-
   function openSheet(title, text){
     sheetTitle.textContent = title;
     sheetText.textContent = text;
@@ -757,7 +696,7 @@
   sheetClose.addEventListener("click", closeSheet);
 
   /***********************
-   * PAGES + PROGRESS DOTS
+   * PAGES + PROGRESS
    ***********************/
   const pages = ["p1","p2","p3","p4","p5","p6"].map(id=>document.getElementById(id));
   const progress = document.getElementById("progress");
@@ -775,47 +714,24 @@
   showPage(0);
 
   /***********************
-   * STATS (localStorage)
+   * STATS (in-memory only)
    ***********************/
-  const LS_KEY = "valentine_stats_v1";
-  const defaultStats = {
+  const stats = {
     nameTries: 0,
     giftChoice: "—",
     delivery: "—",
     timeChoice: "—",
     noClicks: 0,
     nameValue: "—",
-    approved: false,
-    startedAt: Date.now()
+    approved: false
   };
-  function loadStats(){
-    try{
-      const raw = localStorage.getItem(LS_KEY);
-      if(!raw) return {...defaultStats};
-      const s = JSON.parse(raw);
-      return {...defaultStats, ...s};
-    }catch(e){
-      return {...defaultStats};
-    }
-  }
-  function saveStats(s){
-    localStorage.setItem(LS_KEY, JSON.stringify(s));
-  }
-  let stats = loadStats();
-
-  // If already approved and has time, jump to final (optional). Keep it safe:
-  // We'll only auto-jump if approved == true and timeChoice != "—"
-  if(stats.approved && stats.timeChoice && stats.timeChoice !== "—"){
-    showPage(5);
-    renderFinal();
-    startMskClocks();
-  }
 
   /***********************
-   * PAGE 1: Envelope + Typing + Activation
+   * PAGE 1: Envelope -> reveal activation panel
    ***********************/
   const envelope = document.getElementById("envelope");
   const seal = document.getElementById("seal");
+  const activationPanel = document.getElementById("activationPanel");
   const typing1 = document.getElementById("typing1");
   const nameInput = document.getElementById("nameInput");
   const activateBtn = document.getElementById("activateBtn");
@@ -824,15 +740,18 @@
   const percent = document.getElementById("percent");
 
   let envOpened = false;
+
   seal.addEventListener("click", ()=>{
-    envOpened = !envOpened;
-    envelope.classList.toggle("opened", envOpened);
-    if(envOpened){
-      typeText(typing1, "Персональное приглашение для тебя… 💌");
-      toast("Конверт открыт. Теперь — активация 😉");
-    }else{
-      typing1.innerHTML = "";
-    }
+    if(envOpened) return; // only open once (clean flow)
+    envOpened = true;
+
+    envelope.classList.add("opened");
+    activationPanel.classList.add("show");
+
+    typeText(typing1, "Персональное приглашение для тебя… 💌", 24);
+    toast("Конверт открыт. Теперь — активация 😉");
+
+    setTimeout(()=>nameInput.focus(), 450);
   });
 
   function typeText(el, text, speed=24){
@@ -854,15 +773,10 @@
   }
 
   function normalizeName(v){
-    return (v||"")
-      .trim()
-      .toLowerCase()
-      .replace(/\s+/g," ");
+    return (v||"").trim().toLowerCase().replace(/\s+/g," ");
   }
-
   function isAmina(v){
     const n = normalizeName(v);
-    // accept common variants
     return n === "амина" || n === "amina";
   }
 
@@ -874,16 +788,11 @@
     const name = nameInput.value;
     stats.nameTries += 1;
     stats.nameValue = name ? name.trim() : "—";
-    saveStats(stats);
 
     if(!envOpened){
-      toast("Сначала нажми на сердечко ❤️");
-      envelope.classList.add("opened");
-      envOpened = true;
-      typeText(typing1, "Персональное приглашение для тебя… 💌");
+      toast("Сначала открой конверт ❤️");
       return;
     }
-
     if(!name.trim()){
       toast("Введи имя 🙂");
       nameInput.focus();
@@ -898,7 +807,6 @@
 
     if(isAmina(name)){
       stats.approved = true;
-      saveStats(stats);
       openSheet("✅ Доступ одобрен 💘", "Амина, всё совпало. Добро пожаловать 🙂");
       setTimeout(()=>{
         closeSheet();
@@ -907,7 +815,6 @@
       }, 1050);
     }else{
       stats.approved = false;
-      saveStats(stats);
       openSheet("⛔ Доступ отказан 😌", "Кажется, это не для тебя. Попробуй ещё раз — правильно введи имя.");
       loaderWrap.classList.remove("show");
       bar.style.width = "0%";
@@ -922,7 +829,7 @@
       percent.textContent = "0%";
       bar.style.width = "0%";
       const timer = setInterval(()=>{
-        p += Math.floor(rand(2, 6)); // smooth, visible
+        p += Math.floor(rand(2, 6));
         if(p>100) p=100;
         bar.style.width = p + "%";
         percent.textContent = p + "%";
@@ -934,46 +841,57 @@
     });
   }
 
+  nameInput.addEventListener("keydown",(e)=>{
+    if(e.key==="Enter") activateBtn.click();
+  });
+
   /***********************
-   * PAGE 2: Yes / No moving + toasts
+   * PAGE 2: NO button scenario (sequential 10, then disable)
    ***********************/
   const yesBtn = document.getElementById("yesBtn");
   const noBtn = document.getElementById("noBtn");
   const arena = document.getElementById("arena");
 
-  const noPhrases = [
-    "Хм… попытка отменить романтику зафиксирована 😌",
+  const noScenario = [
+	"Это был пробный клик? Попробуем ещё? 😉✨",
+    "Я понял. Но сюрприз уже настроился на «Да» 😏",
+    "Мне кажется, ты промахнулась 😇 Будь повнимательнее… 🎯",
+    "Ты сейчас кокетничаешь, да? 😉",
+    "Хм… попытка отменить романтику зафиксирована 📋💘",
     "Кажется, кто-то притворяется скромной 😏",
-    "А ты настойчивая… но всё равно нужно нажать «Да» 😉"
+    "Ты сейчас улыбаешься, я уверен 😊",
+    "Ммм… твоё сопротивление выглядит мило 😌💞",
+    "Кажется, кто-то любит создавать напряжение 😏⚡",
+    "Ты почти победила… но кнопка «Да» всё равно сильнее ❤️"
   ];
 
   function moveNoBtn(){
     const rect = arena.getBoundingClientRect();
-    const bw = 140; // approximate button width
-    const bh = 46;  // approximate height
+    const bw = 150;
+    const bh = 46;
     const x = rand(10, Math.max(10, rect.width - bw - 10));
     const y = rand(10, Math.max(10, rect.height - bh - 10));
     noBtn.style.left = x + "px";
     noBtn.style.top  = y + "px";
     noBtn.style.transform = "translateX(0)";
   }
-
-  // initial position
-  setTimeout(()=>{ moveNoBtn(); }, 50);
+  setTimeout(()=>moveNoBtn(), 50);
 
   noBtn.addEventListener("click", ()=>{
-    stats.noClicks += 1;
-    saveStats(stats);
+    if(stats.noClicks >= 10) return;
 
-    if(stats.noClicks <= 5){
-      moveNoBtn();
-      toast(pick(noPhrases));
-      if(stats.noClicks === 5){
-        openSheet("🙃 Лимит попыток", "Окей… «Нет» уже достаточно. Теперь — нажми «Да» 💘");
-      }
-    }else{
-      toast("Только «Да» 😇");
-      moveNoBtn();
+    stats.noClicks += 1;
+    const idx = stats.noClicks - 1;
+
+    toast(noScenario[idx] || "Нажми «Да» 😉");
+    moveNoBtn();
+
+    if(stats.noClicks >= 10){
+      setTimeout(()=>{
+        noBtn.classList.add("disabledLike");
+        noBtn.textContent = "Нет 🙈 (недоступно)";
+        toast("Теперь доступно только «Да» 💘");
+      }, 220);
     }
   });
 
@@ -982,71 +900,57 @@
     showPage(2);
   });
 
+  window.addEventListener("resize", ()=>{
+    if(document.getElementById("p2").classList.contains("show")) moveNoBtn();
+  });
+
   /***********************
-   * PAGE 3: gift selection + modal
+   * PAGE 3: gift
    ***********************/
   const giftBtns = Array.from(document.querySelectorAll("#p3 .btn[data-gift]"));
   const to4 = document.getElementById("to4");
-
   function setEnabled(btn, enabled){
     btn.disabled = !enabled;
     btn.style.opacity = enabled ? "1" : ".6";
   }
-
   giftBtns.forEach(b=>{
     b.addEventListener("click", ()=>{
       giftBtns.forEach(x=>x.classList.remove("primary"));
       b.classList.add("primary");
-
       stats.giftChoice = b.getAttribute("data-gift");
-      saveStats(stats);
-
       openSheet("💝 Выбор принят", b.getAttribute("data-modal"));
       setEnabled(to4, true);
     });
   });
-
-  to4.addEventListener("click", ()=>{
-    showPage(3);
-  });
+  to4.addEventListener("click", ()=>showPage(3));
 
   /***********************
    * PAGE 4: delivery
    ***********************/
   const deliveryBtn = document.getElementById("deliveryBtn");
   const to5 = document.getElementById("to5");
-
   deliveryBtn.addEventListener("click", ()=>{
     deliveryBtn.classList.add("primary");
     stats.delivery = "Лично";
-    saveStats(stats);
     openSheet("🚚 Способ выбран", "Лично — звучит правильно 🤍");
     setEnabled(to5, true);
   });
-
-  to5.addEventListener("click", ()=>{
-    showPage(4);
-  });
+  to5.addEventListener("click", ()=>showPage(4));
 
   /***********************
-   * PAGE 5: time choice
+   * PAGE 5: time
    ***********************/
   const times = document.getElementById("times");
   const to6 = document.getElementById("to6");
-
   Array.from(times.querySelectorAll(".btn")).forEach(btn=>{
     btn.addEventListener("click", ()=>{
       Array.from(times.querySelectorAll(".btn")).forEach(x=>x.classList.remove("primary"));
       btn.classList.add("primary");
-
       stats.timeChoice = btn.getAttribute("data-time");
-      saveStats(stats);
-
       openSheet("⏰ Время принято", "Окей. Я запомнил 🙂");
       setEnabled(to6, true);
     });
   });
-
   to6.addEventListener("click", ()=>{
     showPage(5);
     renderFinal();
@@ -1054,30 +958,13 @@
   });
 
   /***********************
-   * PAGE 6: final stats + MSK time + countdown
+   * PAGE 6: final
    ***********************/
   const statsBox = document.getElementById("stats");
   const mskNow = document.getElementById("mskNow");
   const countdown = document.getElementById("countdown");
   const targetHint = document.getElementById("targetHint");
   const copyStatsBtn = document.getElementById("copyStats");
-
-  function renderFinal(){
-    // Ensure placeholders
-    const s = loadStats();
-    stats = s;
-
-    statsBox.innerHTML = `
-      <p>💌 Попыток ввода имени: <b>${s.nameTries}</b></p>
-      <p>🎁 Подарок: <b>${escapeHtml(s.giftChoice)}</b></p>
-      <p>🚚 Способ: <b>${escapeHtml(s.delivery)}</b></p>
-      <p>⏰ Время: <b>${escapeHtml(s.timeChoice)}</b></p>
-      <p>🙃 Нажатий «НЕТ»: <b>${s.noClicks}</b></p>
-    `;
-
-    const timeStr = (s.timeChoice && s.timeChoice !== "—") ? s.timeChoice : "—";
-    targetHint.textContent = `14 февраля, ${timeStr} (МСК)`;
-  }
 
   function escapeHtml(str){
     return String(str ?? "")
@@ -1088,33 +975,29 @@
       .replaceAll("'","&#039;");
   }
 
-  function getMskDate(){
-    // Construct a Date object representing "now" in MSK (+03:00) without relying on local TZ.
-    // We use Intl to format parts in Europe/Moscow, then rebuild.
+  function renderFinal(){
+    statsBox.innerHTML = `
+      <p>💌 Попыток ввода имени: <b>${stats.nameTries}</b></p>
+      <p>🎁 Подарок: <b>${escapeHtml(stats.giftChoice)}</b></p>
+      <p>🚚 Способ: <b>${escapeHtml(stats.delivery)}</b></p>
+      <p>⏰ Время: <b>${escapeHtml(stats.timeChoice)}</b></p>
+      <p>🙃 Нажатий «НЕТ»: <b>${stats.noClicks}</b></p>
+    `;
+    const timeStr = (stats.timeChoice && stats.timeChoice !== "—") ? stats.timeChoice : "—";
+    targetHint.textContent = `14 февраля, ${timeStr} (МСК)`;
+  }
+
+  function getMskParts(){
     const parts = new Intl.DateTimeFormat("ru-RU", {
       timeZone: "Europe/Moscow",
       year:"numeric", month:"2-digit", day:"2-digit",
       hour:"2-digit", minute:"2-digit", second:"2-digit",
       hour12:false
     }).formatToParts(new Date());
-
     const get = (type)=>parts.find(p=>p.type===type)?.value ?? "00";
-    const y = get("year");
-    const mo = get("month");
-    const d = get("day");
-    const h = get("hour");
-    const mi = get("minute");
-    const se = get("second");
-
-    // This Date is in local tz, but represents the same wall-clock components of MSK.
-    // We'll use it consistently for display + diff by also building target the same way.
-    return { y:+y, mo:+mo, d:+d, h:+h, mi:+mi, se:+se };
+    return { y:+get("year"), mo:+get("month"), d:+get("day"), h:+get("hour"), mi:+get("minute"), se:+get("second") };
   }
-
-  function buildMskLikeLocal(year, month, day, hh, mm, ss){
-    // Build a local Date from explicit components (interpreted in local tz),
-    // but since both "now" and "target" are built this way from MSK components,
-    // the difference (target - now) remains correct.
+  function buildLocalFromParts(year, month, day, hh, mm, ss){
     return new Date(year, month-1, day, hh, mm, ss, 0);
   }
 
@@ -1123,20 +1006,21 @@
     if(clockTimer) return;
 
     const tick = ()=>{
-      const nowP = getMskDate();
-      const now = buildMskLikeLocal(nowP.y, nowP.mo, nowP.d, nowP.h, nowP.mi, nowP.se);
+      const nowP = getMskParts();
+      const now = buildLocalFromParts(nowP.y, nowP.mo, nowP.d, nowP.h, nowP.mi, nowP.se);
 
-      mskNow.textContent = `${String(nowP.d).padStart(2,"0")}.${String(nowP.mo).padStart(2,"0")}.${nowP.y}  ${String(nowP.h).padStart(2,"0")}:${String(nowP.mi).padStart(2,"0")}:${String(nowP.se).padStart(2,"0")}`;
+      mskNow.textContent =
+        `${String(nowP.d).padStart(2,"0")}.${String(nowP.mo).padStart(2,"0")}.${nowP.y}  `+
+        `${String(nowP.h).padStart(2,"0")}:${String(nowP.mi).padStart(2,"0")}:${String(nowP.se).padStart(2,"0")}`;
 
       const time = (stats.timeChoice && stats.timeChoice !== "—") ? stats.timeChoice : "00:00";
       const [th, tm] = time.split(":").map(n=>parseInt(n,10));
       let targetYear = nowP.y;
 
-      // target is Feb 14 at chosen time (MSK). If already past, move to next year.
-      let target = buildMskLikeLocal(targetYear, 2, 14, (th||0), (tm||0), 0);
+      let target = buildLocalFromParts(targetYear, 2, 14, (th||0), (tm||0), 0);
       if(target.getTime() < now.getTime()){
         targetYear += 1;
-        target = buildMskLikeLocal(targetYear, 2, 14, (th||0), (tm||0), 0);
+        target = buildLocalFromParts(targetYear, 2, 14, (th||0), (tm||0), 0);
       }
 
       const diff = Math.max(0, target.getTime() - now.getTime());
@@ -1149,10 +1033,6 @@
 
       countdown.textContent = `${dd}д ${String(hh).padStart(2,"0")}ч ${String(mm).padStart(2,"0")}м ${String(ss).padStart(2,"0")}с`;
       targetHint.textContent = `14 февраля ${String(th||0).padStart(2,"0")}:${String(tm||0).padStart(2,"0")} (МСК)`;
-
-      // Keep approved status
-      stats.approved = true;
-      saveStats(stats);
     };
 
     tick();
@@ -1160,13 +1040,12 @@
   }
 
   copyStatsBtn.addEventListener("click", async ()=>{
-    const s = loadStats();
     const text =
-`💌 Попыток ввода имени: ${s.nameTries}
-🎁 Подарок: ${s.giftChoice}
-🚚 Способ: ${s.delivery}
-⏰ Время: ${s.timeChoice}
-🙃 Нажатий «НЕТ»: ${s.noClicks}`;
+`💌 Попыток ввода имени: ${stats.nameTries}
+🎁 Подарок: ${stats.giftChoice}
+🚚 Способ: ${stats.delivery}
+⏰ Время: ${stats.timeChoice}
+🙃 Нажатий «НЕТ»: ${stats.noClicks}`;
     try{
       await navigator.clipboard.writeText(text);
       toast("Скопировано ✅");
@@ -1174,25 +1053,6 @@
       openSheet("📋 Не удалось скопировать", "Скопируй вручную — возможно, браузер запретил доступ к буферу обмена.");
     }
   });
-
-  /***********************
-   * Little UX: Enter to activate
-   ***********************/
-  nameInput.addEventListener("keydown",(e)=>{
-    if(e.key==="Enter") activateBtn.click();
-  });
-
-  /***********************
-   * Safety: if user returns to page 2, keep noBtn inside
-   ***********************/
-  window.addEventListener("resize", ()=>{
-    if(document.getElementById("p2").classList.contains("show")){
-      moveNoBtn();
-    }
-  });
-
-  // Initial typing hint
-  setTimeout(()=>typeText(typing1, "Нажми на сердечко, чтобы открыть конверт ❤️", 22), 260);
 </script>
 
 </body>
