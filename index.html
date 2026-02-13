@@ -1,369 +1,1199 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Сюрприз для Амины</title>
-<style>
-body {
-    margin:0;
-    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-    overflow:hidden;
-    height:100vh;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:linear-gradient(180deg,#fff,#ffe6f0,#ffd6e7);
-    position:relative;
-}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>14 февраля 💌</title>
+  <style>
+    :root{
+      /* ONLY 3 COLORS */
+      --white:#ffffff;
+      --pink:#ffd3e6;
+      --red:#ff2d55;
 
-.container {
-    text-align:center;
-    width:90%;
-    max-width:400px;
-    z-index:2;
-}
+      --shadow: 0 18px 45px rgba(0,0,0,.14);
+      --shadow2: 0 10px 25px rgba(0,0,0,.12);
+      --r:22px;
+      --r2:16px;
+      --safe-top: env(safe-area-inset-top, 0px);
+      --safe-bot: env(safe-area-inset-bottom, 0px);
+    }
 
-h1,h2,p{margin:15px 0;}
-button{
-    padding:12px 20px;
-    border:none;
-    border-radius:25px;
-    background:#ff4d88;
-    color:white;
-    font-size:16px;
-    margin:10px;
-    cursor:pointer;
-    font-weight:bold;
-    transition:0.3s;
-}
-button:hover{opacity:0.85;}
-input{
-    padding:10px;
-    border-radius:20px;
-    border:1px solid #ff99bb;
-    text-align:center;
-    font-size:16px;
-}
-.card{
-    background:white;
-    padding:15px;
-    border-radius:15px;
-    margin:10px 0;
-    cursor:pointer;
-    transition:0.3s;
-}
-.card:hover{transform:scale(1.05);}
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-rounded, -apple-system, BlinkMacSystemFont, "SF Pro Display","SF Pro Text", system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+      color:rgba(0,0,0,.82);
+      overflow:hidden;
+      background:
+        radial-gradient(1100px 700px at 20% 10%, var(--white) 0%, rgba(255,255,255,0) 55%),
+        radial-gradient(900px 600px at 90% 25%, rgba(255,45,85,.18) 0%, rgba(255,45,85,0) 55%),
+        linear-gradient(180deg, var(--white) 0%, var(--pink) 45%, rgba(255,45,85,.16) 100%);
+      position:relative;
+    }
 
-.hidden{display:none !important;}
+    /* Soft floating emojis (not chaotic fast, but alive) */
+    .bg{
+      position:absolute; inset:0;
+      overflow:hidden;
+      pointer-events:none;
+      z-index:0;
+    }
+    .float{
+      position:absolute;
+      filter: drop-shadow(0 10px 15px rgba(0,0,0,.10));
+      opacity:.95;
+      transform: translate3d(0,0,0);
+      animation: drift var(--dur) ease-in-out infinite;
+      will-change: transform;
+    }
+    @keyframes drift{
+      0%{ transform: translate3d(0,0,0) rotate(0deg); }
+      50%{ transform: translate3d(var(--dx), var(--dy), 0) rotate(6deg); }
+      100%{ transform: translate3d(0,0,0) rotate(0deg); }
+    }
 
-/* Модальное окно */
-.modal{
-    position:fixed;
-    top:20%;
-    left:50%;
-    transform:translateX(-50%);
-    background:white;
-    color:#a1003c;
-    padding:18px 25px;
-    border-radius:20px;
-    box-shadow:0 0 25px rgba(0,0,0,0.4);
-    font-weight:bold;
-    display:none;
-    z-index:2000;
-    max-width:300px;
-    text-align:center;
-    font-size:16px;
-}
+    /* Top overlay area for toasts/modals so nothing overlaps content */
+    .top-layer{
+      position:fixed;
+      left:0; right:0;
+      top: calc(12px + var(--safe-top));
+      padding: 0 14px;
+      z-index:50;
+      pointer-events:none;
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+    }
 
-/* Загрузка */
-#loader{
-    width:90%;
-    height:40px;
-    background:#ffe6f0;
-    border-radius:25px;
-    overflow:hidden;
-    margin:25px auto;
-    box-shadow:0 0 10px rgba(0,0,0,0.1) inset;
-    position:relative;
-    font-size:16px;
-    font-weight:bold;
-    color:#a1003c;
-}
-#loaderBar{
-    height:100%;
-    width:0;
-    background:linear-gradient(90deg,#ff4d88,#ff85b1,#ffc0da);
-    border-radius:25px;
-    box-shadow:0 0 8px rgba(255,77,136,0.7);
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    color:white;
-    font-weight:bold;
-    transition: width 0.15s ease;
-}
+    .toast{
+      width:min(420px, calc(100vw - 28px));
+      background: var(--white);
+      border-radius: 18px;
+      box-shadow: var(--shadow2);
+      padding: 12px 14px;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      transform: translateY(-18px);
+      opacity:0;
+      animation: toastIn .42s cubic-bezier(.2,.9,.2,1) forwards;
+      pointer-events:auto;
+    }
+    @keyframes toastIn{
+      to{ transform: translateY(0); opacity:1; }
+    }
+    .toast .dot{
+      width:10px; height:10px; border-radius:999px;
+      background: var(--red);
+      margin-top:6px;
+      flex:0 0 auto;
+    }
+    .toast .t{
+      line-height:1.25;
+      font-size:14px;
+    }
 
-/* Плавающие символы фона */
-.floating-symbol{
-    position:absolute;
-    pointer-events:none;
-    user-select:none;
-    animation-name:floatSymbol;
-    animation-timing-function: linear;
-    z-index:0;
-}
-@keyframes floatSymbol{
-    0%{transform:translateY(100vh);}
-    100%{transform:translateY(-50px);}
-}
+    /* Top-sheet modal */
+    .sheetWrap{
+      position:fixed; inset:0;
+      z-index:60;
+      display:none;
+      align-items:flex-start;
+      justify-content:center;
+      padding-top: calc(10px + var(--safe-top));
+      pointer-events:none;
+    }
+    .sheetWrap.show{ display:flex; }
+    .sheetBackdrop{
+      position:absolute; inset:0;
+      background: rgba(255,45,85,.08); /* still within palette feel */
+      pointer-events:auto;
+      opacity:0;
+      animation: fadeIn .25s ease forwards;
+    }
+    @keyframes fadeIn{ to{opacity:1;} }
+    .sheet{
+      position:relative;
+      width:min(440px, calc(100vw - 28px));
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding: 14px 14px 16px;
+      transform: translateY(-22px);
+      opacity:0;
+      animation: sheetIn .42s cubic-bezier(.2,.95,.2,1) forwards;
+      pointer-events:auto;
+    }
+    @keyframes sheetIn{
+      to{ transform: translateY(0); opacity:1; }
+    }
+    .sheet .head{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding-bottom:10px;
+    }
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      background: rgba(255,45,85,.12);
+      border-radius: 999px;
+      padding: 8px 10px;
+      font-weight:700;
+      color: rgba(0,0,0,.78);
+      font-size:13px;
+    }
+    .xbtn{
+      border:none;
+      background: rgba(255,45,85,.12);
+      color: rgba(0,0,0,.75);
+      border-radius: 12px;
+      padding: 8px 10px;
+      font-weight:800;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s ease, background .2s ease;
+    }
+    .xbtn:active{ transform: scale(.96); }
+    .sheet p{ margin:0; font-size:14px; line-height:1.35; }
 
-/* Финальная страница */
-#final{
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-    color:#a1003c;
-    background:linear-gradient(180deg,#fff,#ffe6f0,#ffd6e7);
-    width:100%;
-    height:100%;
-    padding:20px;
-    font-weight:bold;
-    z-index:2;
-}
+    /* App shell */
+    .app{
+      position:relative;
+      z-index:1;
+      height:100%;
+      display:flex;
+      flex-direction:column;
+      padding:
+        calc(18px + var(--safe-top))
+        16px
+        calc(18px + var(--safe-bot))
+        16px;
+      gap:12px;
+    }
 
-#final h2{font-size:32px; margin-bottom:15px; color:#ff4d88;}
+    /* progress dots */
+    .progress{
+      display:flex;
+      justify-content:center;
+      gap:8px;
+      padding-top: 2px;
+      opacity:0;
+      transform: translateY(6px);
+      animation: rise .7s ease .35s forwards;
+    }
+    @keyframes rise{ to{opacity:1; transform: translateY(0);} }
+    .dotp{
+      width:7px;height:7px;border-radius:999px;
+      background: rgba(255,45,85,.22);
+      transform: scale(.96);
+      transition: .3s ease;
+    }
+    .dotp.on{
+      background: var(--red);
+      transform: scale(1.18);
+      box-shadow: 0 8px 18px rgba(0,0,0,.10);
+    }
 
-#sendNote{
-    font-size:22px;
-    margin-bottom:15px;
-    color:#ff1a70;
-    text-shadow: 0 0 5px #ffc0da;
-}
+    /* stage */
+    .stage{
+      flex:1;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
 
-#stats{
-    background:rgba(255,77,136,0.1);
-    padding:20px;
-    border-radius:25px;
-    text-align:left;
-    width:90%;
-    max-width:400px;
-    margin-top:10px;
-    box-shadow:0 4px 15px rgba(255,77,136,0.3);
-}
-#stats p{
-    margin:8px 0;
-    font-size:18px;
-}
+    .card{
+      width:min(440px, 100%);
+      background: var(--white);
+      border-radius: var(--r);
+      box-shadow: var(--shadow);
+      padding: 18px 16px 16px;
+      position:relative;
+      overflow:hidden;
+      transform: translateY(10px);
+      opacity:0;
+      animation: cardIn .7s cubic-bezier(.2,.95,.2,1) forwards;
+    }
+    @keyframes cardIn{
+      to{ transform: translateY(0); opacity:1; }
+    }
 
-/* Таймер отдельный блок */
-#countdown{
-    margin-top:20px;
-    font-size:20px;
-    font-weight:bold;
-    color:#ff1a70;
-    background:white;
-    padding:15px 25px;
-    border-radius:20px;
-    box-shadow:0 0 15px rgba(255,77,136,0.4);
-    text-align:center;
-    width:90%;
-    max-width:300px;
-}
-</style>
+    /* subtle moving highlight on card */
+    .card::before{
+      content:"";
+      position:absolute;
+      inset:-60px -80px auto -80px;
+      height:160px;
+      background: radial-gradient(closest-side, rgba(255,45,85,.12), rgba(255,45,85,0));
+      transform: translateX(-10px);
+      animation: glow 6s ease-in-out infinite;
+      pointer-events:none;
+    }
+    @keyframes glow{
+      0%,100%{ transform: translateX(-10px) translateY(0); opacity:.9; }
+      50%{ transform: translateX(60px) translateY(12px); opacity:.55; }
+    }
+
+    .title{
+      margin:0 0 6px 0;
+      font-size: 22px;
+      letter-spacing: -.2px;
+      text-align:center;
+    }
+    .sub{
+      margin:0 0 12px 0;
+      font-size: 14px;
+      text-align:center;
+      opacity:.82;
+    }
+
+    .divider{
+      height:1px;
+      background: rgba(255,45,85,.14);
+      margin: 12px 0 14px;
+    }
+
+    /* buttons */
+    .btnRow{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+    .btn{
+      border:none;
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-weight:800;
+      font-size: 14px;
+      background: rgba(255,45,85,.12);
+      color: rgba(0,0,0,.82);
+      transition: transform .15s ease, box-shadow .2s ease, background .2s ease;
+      position:relative;
+      overflow:hidden;
+      min-width: 132px;
+    }
+    .btn.primary{
+      background: var(--red);
+      color: var(--white);
+      box-shadow: 0 14px 25px rgba(0,0,0,.16);
+    }
+    .btn:active{ transform: scale(.97); }
+    .btn.primary:active{ transform: scale(.975); }
+
+    /* shimmer */
+    .btn::after{
+      content:"";
+      position:absolute;
+      inset:-30% auto -30% -60%;
+      width:55%;
+      transform: rotate(18deg);
+      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.45), rgba(255,255,255,0));
+      opacity:.0;
+      transition: opacity .2s ease;
+    }
+    .btn.primary:hover::after{ opacity:.45; animation: sweep .9s ease; }
+    @keyframes sweep{
+      from{ left:-60%; }
+      to{ left:120%; }
+    }
+
+    /* input */
+    .field{
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      margin-top: 6px;
+    }
+    .label{
+      font-weight:800;
+      font-size: 13px;
+      text-align:center;
+      opacity:.82;
+    }
+    input{
+      width:100%;
+      border: 1px solid rgba(255,45,85,.18);
+      border-radius: 16px;
+      padding: 12px 14px;
+      font-size: 16px;
+      outline:none;
+      background: rgba(255,45,85,.06);
+      transition: box-shadow .2s ease, border-color .2s ease, transform .15s ease;
+    }
+    input:focus{
+      border-color: rgba(255,45,85,.38);
+      box-shadow: 0 14px 26px rgba(0,0,0,.10);
+      transform: translateY(-1px);
+    }
+
+    /* typing text */
+    .typing{
+      min-height: 22px;
+      font-weight:800;
+      text-align:center;
+      margin-top: 2px;
+      color: rgba(0,0,0,.82);
+    }
+    .typing .cursor{
+      display:inline-block;
+      width:8px;
+      height:14px;
+      background: rgba(255,45,85,.55);
+      margin-left:6px;
+      border-radius:4px;
+      transform: translateY(2px);
+      animation: blink .95s steps(1,end) infinite;
+    }
+    @keyframes blink{ 50%{opacity:0;} }
+
+    /* loading runner */
+    .loaderWrap{
+      margin-top: 10px;
+      display:none;
+      flex-direction:column;
+      gap:10px;
+      align-items:center;
+    }
+    .loaderWrap.show{ display:flex; }
+
+    .loaderLine{
+      width:100%;
+      border-radius: 999px;
+      height: 10px;
+      background: rgba(255,45,85,.10);
+      overflow:hidden;
+      box-shadow: 0 10px 22px rgba(0,0,0,.08);
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      border-radius:999px;
+      background: var(--red);
+      transition: width .08s linear;
+    }
+    .percent{
+      font-weight:900;
+      font-size: 13px;
+      opacity:.85;
+      letter-spacing:.3px;
+    }
+
+    /* page transitions */
+    .page{
+      display:none;
+      animation: pop .45s cubic-bezier(.2,.9,.2,1);
+    }
+    .page.show{ display:block; }
+    @keyframes pop{
+      from{ opacity:0; transform: translateY(10px) scale(.985); }
+      to{ opacity:1; transform: translateY(0) scale(1); }
+    }
+
+    /* Envelope */
+    .envelopeWrap{
+      display:flex;
+      justify-content:center;
+      margin: 6px 0 10px;
+    }
+    .envelope{
+      width: min(320px, 88%);
+      aspect-ratio: 16/11;
+      background: var(--white);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+      transform: translateZ(0);
+    }
+    .envShadow{
+      position:absolute; inset:0;
+      background: radial-gradient(closest-side at 50% -10%, rgba(255,45,85,.18), rgba(255,45,85,0) 60%);
+      pointer-events:none;
+    }
+
+    .envBody{
+      position:absolute; inset:0;
+    }
+    .envBody::before{
+      content:"";
+      position:absolute; left:0; right:0; bottom:0; top:34%;
+      background: rgba(255,45,85,.06);
+    }
+
+    .flap{
+      position:absolute;
+      left:-15%; right:-15%;
+      top:-25%;
+      height:60%;
+      background: rgba(255,45,85,.10);
+      transform-origin: 50% 90%;
+      transform: rotateX(0deg);
+      border-bottom-left-radius: 30px;
+      border-bottom-right-radius: 30px;
+      transition: transform .65s cubic-bezier(.2,.9,.2,1), opacity .35s ease;
+      box-shadow: 0 18px 30px rgba(0,0,0,.10);
+    }
+    .heartSeal{
+      position:absolute;
+      left:50%; top:54%;
+      transform: translate(-50%,-50%);
+      width:64px; height:64px;
+      border-radius: 22px;
+      background: var(--red);
+      color: var(--white);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size: 26px;
+      box-shadow: 0 18px 35px rgba(0,0,0,.18);
+      cursor:pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: transform .15s ease;
+    }
+    .heartSeal:active{ transform: translate(-50%,-50%) scale(.96); }
+
+    .opened .flap{
+      transform: rotateX(160deg);
+      opacity:.85;
+    }
+    .opened .heartSeal{
+      animation: sealPulse 1.05s ease-in-out infinite;
+    }
+    @keyframes sealPulse{
+      0%,100%{ transform: translate(-50%,-50%) scale(1); }
+      50%{ transform: translate(-50%,-50%) scale(1.04); }
+    }
+
+    /* No button move area */
+    .arena{
+      position:relative;
+      height: 180px;
+      margin-top: 8px;
+    }
+    .arena .btn{
+      position:absolute;
+      left:50%;
+      transform: translateX(-50%);
+    }
+    .arena .btn:active{ transform: translateX(-50%) scale(.97); }
+
+    /* Stat block */
+    .finalBanner{
+      background: var(--red);
+      color: var(--white);
+      border-radius: 18px;
+      padding: 12px 14px;
+      text-align:center;
+      font-weight:900;
+      box-shadow: 0 18px 35px rgba(0,0,0,.18);
+      margin-bottom: 10px;
+      animation: pop .45s cubic-bezier(.2,.9,.2,1);
+    }
+    .stats{
+      border-radius: 18px;
+      background: rgba(255,45,85,.08);
+      padding: 12px 14px;
+      box-shadow: 0 14px 28px rgba(0,0,0,.10);
+    }
+    .stats p{
+      margin: 8px 0;
+      font-size: 14px;
+      line-height: 1.25;
+    }
+
+    .timeBox{
+      margin-top: 10px;
+      display:grid;
+      gap:10px;
+    }
+    .miniCard{
+      background: var(--white);
+      border-radius: 18px;
+      padding: 12px 14px;
+      box-shadow: 0 14px 28px rgba(0,0,0,.10);
+    }
+    .miniCard .k{ font-weight:900; font-size:13px; opacity:.85; }
+    .miniCard .v{ margin-top:4px; font-weight:900; font-size: 16px; }
+
+    /* small helper */
+    .center{ text-align:center; }
+    .muted{ opacity:.75; }
+
+    /* little footer */
+    .foot{
+      text-align:center;
+      font-size: 12px;
+      opacity:.72;
+      padding-bottom: 2px;
+      transform: translateY(6px);
+      opacity:0;
+      animation: rise .7s ease .55s forwards;
+    }
+  </style>
 </head>
 <body>
 
-<!-- Плавающие символы -->
+  <div class="bg" id="bg"></div>
+
+  <div class="top-layer" id="toastLayer"></div>
+
+  <div class="sheetWrap" id="sheetWrap" aria-hidden="true">
+    <div class="sheetBackdrop" id="sheetBackdrop"></div>
+    <div class="sheet" role="dialog" aria-modal="true">
+      <div class="head">
+        <div class="pill" id="sheetTitle">💌 Сообщение</div>
+        <button class="xbtn" id="sheetClose">Закрыть</button>
+      </div>
+      <p id="sheetText"></p>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="progress" id="progress"></div>
+
+    <div class="stage">
+      <div class="card">
+        <div class="page show" id="p1">
+          <h1 class="title">Маленький сюрприз 💘</h1>
+          <p class="sub">Только для одной получательницы.</p>
+
+          <div class="envelopeWrap">
+            <div class="envelope" id="envelope">
+              <div class="envShadow"></div>
+              <div class="envBody"></div>
+              <div class="flap"></div>
+              <div class="heartSeal" id="seal" title="Открыть">❤️</div>
+            </div>
+          </div>
+
+          <div class="typing" id="typing1"></div>
+
+          <div class="divider"></div>
+
+          <div class="field">
+            <div class="label">Введи имя для активации</div>
+            <input id="nameInput" inputmode="text" autocomplete="off" placeholder="Например: Амина" />
+          </div>
+
+          <div class="btnRow" style="margin-top:12px;">
+            <button class="btn primary" id="activateBtn">Активировать</button>
+          </div>
+
+          <div class="loaderWrap" id="loaderWrap">
+            <div class="label">Проверяется получатель…</div>
+            <div class="loaderLine"><div class="bar" id="bar"></div></div>
+            <div class="percent" id="percent">0%</div>
+          </div>
+
+        </div>
+
+        <div class="page" id="p2">
+          <h2 class="title" id="helloTitle">Амина, ты готова принять его? 💌</h2>
+          <p class="sub">Скажи честно 🙂</p>
+
+          <div class="btnRow" style="margin-top:10px;">
+            <button class="btn primary" id="yesBtn">Да ✅</button>
+          </div>
+
+          <div class="arena" id="arena">
+            <button class="btn" id="noBtn">Нет 🙈</button>
+          </div>
+
+          <p class="center muted" style="margin:0;">Подсказка: «Да» выглядит подозрительно правильно 😏</p>
+        </div>
+
+        <div class="page" id="p3">
+          <h2 class="title">Выбери формат внимания 💝</h2>
+          <p class="sub">Как проявить заботу именно к тебе?</p>
+          <div class="divider"></div>
+
+          <div class="btnRow">
+            <button class="btn" data-gift="🌹 Цветы" data-modal="Классика… но она всегда попадает в сердце 💘">🌹 Цветы</button>
+            <button class="btn" data-gift="🍭 Сладкий букет" data-modal="Ммм… два в одном. Красиво и вкусно 😋">🍭 Сладкий букет</button>
+            <button class="btn" data-gift="🍓 Сладкая корзина" data-modal="Ооо, ты у нас сладкоежка… принято 🍓">🍓 Сладкая корзина</button>
+            <button class="btn" data-gift="✨ Секретный" data-modal="Немного интриги? Мне нравится твой настрой 😏">✨ Секретный</button>
+          </div>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <button class="btn primary" id="to4" disabled style="opacity:.6;">Дальше ➜</button>
+          </div>
+        </div>
+
+        <div class="page" id="p4">
+          <h2 class="title">Выбери способ получения 🚚</h2>
+          <p class="sub">Только один вариант — но самый правильный.</p>
+          <div class="divider"></div>
+
+          <div class="btnRow">
+            <button class="btn" id="deliveryBtn">Лично 🤍</button>
+          </div>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <button class="btn primary" id="to5" disabled style="opacity:.6;">Дальше ➜</button>
+          </div>
+        </div>
+
+        <div class="page" id="p5">
+          <h2 class="title">Во сколько ты будешь готова? ⏰</h2>
+          <p class="sub">Выбери время на 14 февраля.</p>
+          <div class="divider"></div>
+
+          <div class="btnRow" id="times">
+            <button class="btn" data-time="14:00">14:00</button>
+            <button class="btn" data-time="15:00">15:00</button>
+            <button class="btn" data-time="16:00">16:00</button>
+            <button class="btn" data-time="17:00">17:00</button>
+            <button class="btn" data-time="18:00">18:00</button>
+            <button class="btn" data-time="19:00">19:00</button>
+          </div>
+
+          <div class="btnRow" style="margin-top:14px;">
+            <button class="btn primary" id="to6" disabled style="opacity:.6;">Подтвердить ✅</button>
+          </div>
+        </div>
+
+        <div class="page" id="p6">
+          <div class="finalBanner">✅ Подтверждено</div>
+
+          <div class="center" style="font-weight:900; margin-bottom:10px;">
+            📸 Отправь скриншот этой страницы организатору
+          </div>
+
+          <div class="stats" id="stats"></div>
+
+          <div class="timeBox">
+            <div class="miniCard">
+              <div class="k">🕒 Актуальное время (МСК)</div>
+              <div class="v" id="mskNow">—</div>
+            </div>
+            <div class="miniCard">
+              <div class="k">⏳ До получения сюрприза осталось</div>
+              <div class="v" id="countdown">—</div>
+              <div class="muted" style="margin-top:6px; font-size:12px;" id="targetHint">14 февраля, выбранное время</div>
+            </div>
+          </div>
+
+          <div class="btnRow" style="margin-top:12px;">
+            <button class="btn" id="copyStats">Скопировать статистику 📋</button>
+          </div>
+
+          <p class="center muted" style="margin:10px 0 0;">(Можно закрывать — всё сохранено.)</p>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="foot">💗 Белый • Розовый • Красный</div>
+  </div>
+
 <script>
-const symbols=["❤️","🤍","🌸","🎈","🌹"];
-for(let i=0;i<20;i++){
-    const span=document.createElement("span");
-    span.className="floating-symbol";
-    span.innerText=symbols[Math.floor(Math.random()*symbols.length)];
-    let size=10+Math.random()*30;
-    span.style.fontSize=size+"px";
-    span.style.left=Math.random()*100+"%";
-    span.style.animationDuration=(10+Math.random()*20)+"s";
-    span.style.opacity=Math.random()*0.8+0.2;
-    document.body.appendChild(span);
-}
-</script>
+  /***********************
+   * BACKGROUND EMOJIS
+   ***********************/
+  const symbols = ["❤️","🤍","🌸","🎈","🌹"];
+  const bg = document.getElementById("bg");
 
-<!-- Страница 1 -->
-<div class="container" id="page1">
-<h1>Персональное приглашение 💌</h1>
-<p>Введите ваше имя чтобы активировать:</p>
-<input type="text" id="nameInput" placeholder="Ваше имя"><br>
-<button onclick="startLoading()">Активировать</button>
-<div id="loader" class="hidden"><div id="loaderBar">Проверка получателя…</div></div>
-</div>
+  function rand(min,max){ return Math.random()*(max-min)+min; }
+  function pick(a){ return a[Math.floor(Math.random()*a.length)]; }
 
-<!-- Страница 2 -->
-<div class="container hidden" id="page2">
-<h2>Амина, ты готова принять его?</h2>
-<button onclick="nextPage()">ДА 💌</button>
-<button id="noBtn" onclick="moveNo()">НЕТ 🙃</button>
-</div>
+  // Create floating items quickly (no long waiting)
+  const count = 16;
+  for(let i=0;i<count;i++){
+    const el = document.createElement("div");
+    el.className="float";
+    el.textContent = pick(symbols);
 
-<!-- Страница 3 -->
-<div class="container hidden" id="page3">
-<h2>В каком формате сегодня проявить внимание к тебе?</h2>
-<div class="card" onclick="selectGift('🌹 Цветы')">🌹 Цветы</div>
-<div class="card" onclick="selectGift('🍭 Сладкий букет')">🍭 Сладкий букет</div>
-<div class="card" onclick="selectGift('🍓 Сладкая корзина')">🍓 Сладкая корзина</div>
-<div class="card" onclick="selectGift('✨ Секретный')">✨ Секретный</div>
-</div>
+    const size = Math.floor(rand(18, 38)); // different sizes
+    el.style.fontSize = size+"px";
+    el.style.left = rand(-5, 95)+"%";
+    el.style.top = rand(-5, 95)+"%";
 
-<!-- Страница 4 -->
-<div class="container hidden" id="page4">
-<h2>Выберите способ получения</h2>
-<div class="card" onclick="nextTime()">Лично</div>
-</div>
+    // gentle drift
+    el.style.setProperty("--dx", rand(-22, 22)+"px");
+    el.style.setProperty("--dy", rand(-26, 26)+"px");
+    el.style.setProperty("--dur", rand(3.8, 6.8)+"s");
 
-<!-- Страница 5 -->
-<div class="container hidden" id="page5">
-<h2>Во сколько будешь готова принять сюрприз?</h2>
-<button onclick="confirmTime('17:00')">17:00</button>
-<button onclick="confirmTime('18:00')">18:00</button>
-<button onclick="confirmTime('19:00')">19:00</button>
-</div>
+    bg.appendChild(el);
+  }
 
-<!-- Финальная страница -->
-<div id="final" class="fade hidden">
-<h2>Подтверждено ✅</h2>
-<div id="sendNote">Отправьте скриншот получателю 📸</div>
-<div id="stats"></div>
-<div id="countdown"></div>
-</div>
+  /***********************
+   * TOP TOASTS + SHEET
+   ***********************/
+  const toastLayer = document.getElementById("toastLayer");
+  function toast(msg){
+    const t = document.createElement("div");
+    t.className="toast";
+    t.innerHTML = `<div class="dot"></div><div class="t">${msg}</div>`;
+    toastLayer.appendChild(t);
 
-<!-- Модальное окно -->
-<div class="modal" id="modal"></div>
-
-<script>
-let stats = {nameTries:0,giftChoice:"",delivery:"",timeChoice:"",noClicks:0};
-let noCount=0;
-
-// Модальное окно
-function showModal(text){
-    const modal=document.getElementById("modal");
-    modal.innerHTML=text;
-    modal.style.display='block';
-    setTimeout(()=>{modal.style.display='none';},1800);
-}
-
-// Загрузка 0-100
-function startLoading(){
-    stats.nameTries++;
-    const loader=document.getElementById("loader");
-    const bar=document.getElementById("loaderBar");
-    loader.classList.remove("hidden");
-    let width=0;
-    bar.innerText="Проверка получателя…";
-    let interval=setInterval(()=>{
-        width += Math.random()*6 + 2;
-        if(width>=100){
-            width=100;
-            clearInterval(interval);
-            setTimeout(()=>{
-                loader.classList.add("hidden");
-                checkName();
-            },300);
-        }
-        bar.style.width = width+"%";
-        bar.innerText = `Проверка получателя… ${Math.floor(width)}%`;
-    },50);
-}
-
-// Проверка имени
-function checkName(){
-    let name=document.getElementById("nameInput").value.trim().toLowerCase();
-    if(name==="амина"){
-        showModal("Доступ открыт 🎉");
-        setTimeout(()=>{
-            document.getElementById("page1").classList.add("hidden");
-            document.getElementById("page2").classList.remove("hidden");
-        },1000);
-    } else{
-        showModal("Доступ закрыт ❌ Попробуйте снова");
-    }
-}
-
-// Страница 2
-function nextPage(){
-    document.getElementById("page2").classList.add("hidden");
-    document.getElementById("page3").classList.remove("hidden");
-}
-function moveNo(){
-    stats.noClicks++;
-    noCount++;
-    let texts=["Хм… попытка отменить романтику зафиксирована 😌","Кажется, кто-то притворяется скромной 😏","Всё равно нажмёшь «Да» 😉"];
-    showModal(texts[Math.min(noCount-1,2)]);
-    let btn=document.getElementById("noBtn");
-    btn.style.transform="translate("+((Math.random()*300)-150)+"px,"+((Math.random()*100)-50)+"px)";
-}
-
-// Страница 3
-function selectGift(gift){
-    stats.giftChoice=gift;
-    let modalText="";
-    switch(gift){
-        case "🌹 Цветы": modalText="Классика… но она всегда попадает в сердце 💘"; break;
-        case "🍭 Сладкий букет": modalText="Ммм… два в одном. Красиво и вкусно 😋"; break;
-        case "🍓 Сладкая корзина": modalText="Ооо, ты у нас сладкоежка… принято 🍓✨"; break;
-        case "✨ Секретный": modalText="Немного интриги? Мне нравится твой настрой 😏"; break;
-    }
-    showModal(modalText);
+    // auto-remove
     setTimeout(()=>{
-        document.getElementById("page3").classList.add("hidden");
-        document.getElementById("page4").classList.remove("hidden");
-    },1800);
-}
+      t.style.transition = "opacity .25s ease, transform .25s ease";
+      t.style.opacity = "0";
+      t.style.transform = "translateY(-10px)";
+      setTimeout(()=>t.remove(), 260);
+    }, 2400);
+  }
 
-// Страница 4
-function nextTime(){
-    stats.delivery="Лично";
-    document.getElementById("page4").classList.add("hidden");
-    document.getElementById("page5").classList.remove("hidden");
-}
+  const sheetWrap = document.getElementById("sheetWrap");
+  const sheetBackdrop = document.getElementById("sheetBackdrop");
+  const sheetClose = document.getElementById("sheetClose");
+  const sheetTitle = document.getElementById("sheetTitle");
+  const sheetText = document.getElementById("sheetText");
 
-// Страница 5 -> финал
-function confirmTime(time){
-    stats.timeChoice=time;
-    document.getElementById("page5").classList.add("hidden");
-    document.getElementById("final").classList.remove("hidden");
+  function openSheet(title, text){
+    sheetTitle.textContent = title;
+    sheetText.textContent = text;
+    sheetWrap.classList.add("show");
+    sheetWrap.setAttribute("aria-hidden","false");
+  }
+  function closeSheet(){
+    sheetWrap.classList.remove("show");
+    sheetWrap.setAttribute("aria-hidden","true");
+  }
+  sheetBackdrop.addEventListener("click", closeSheet);
+  sheetClose.addEventListener("click", closeSheet);
 
-    document.getElementById("stats").innerHTML=`
-<p>💌 Попыток ввода имени: <b>${stats.nameTries}</b></p>
-<p>🎁 Подарок: <b>${stats.giftChoice}</b></p>
-<p>🚚 Способ: <b>${stats.delivery}</b></p>
-<p>⏰ Время: <b>${stats.timeChoice}</b></p>
-<p>🙃 Нажатий «НЕТ»: <b>${stats.noClicks}</b></p>
-`;
+  /***********************
+   * PAGES + PROGRESS DOTS
+   ***********************/
+  const pages = ["p1","p2","p3","p4","p5","p6"].map(id=>document.getElementById(id));
+  const progress = document.getElementById("progress");
+  const dots = [];
+  for(let i=0;i<pages.length;i++){
+    const d=document.createElement("div");
+    d.className="dotp";
+    progress.appendChild(d);
+    dots.push(d);
+  }
+  function showPage(n){
+    pages.forEach((p,i)=>p.classList.toggle("show", i===n));
+    dots.forEach((d,i)=>d.classList.toggle("on", i<=n));
+  }
+  showPage(0);
 
-    startTimer(stats.timeChoice);
-}
+  /***********************
+   * STATS (localStorage)
+   ***********************/
+  const LS_KEY = "valentine_stats_v1";
+  const defaultStats = {
+    nameTries: 0,
+    giftChoice: "—",
+    delivery: "—",
+    timeChoice: "—",
+    noClicks: 0,
+    nameValue: "—",
+    approved: false,
+    startedAt: Date.now()
+  };
+  function loadStats(){
+    try{
+      const raw = localStorage.getItem(LS_KEY);
+      if(!raw) return {...defaultStats};
+      const s = JSON.parse(raw);
+      return {...defaultStats, ...s};
+    }catch(e){
+      return {...defaultStats};
+    }
+  }
+  function saveStats(s){
+    localStorage.setItem(LS_KEY, JSON.stringify(s));
+  }
+  let stats = loadStats();
 
-// Таймер до сюрприза
-function startTimer(timeStr){
-    let now = new Date();
-    let year = now.getFullYear();
-    let target = new Date(`${year}-02-14T${timeStr}:00+03:00`);
-    if(now>target) target.setFullYear(year+1);
+  // If already approved and has time, jump to final (optional). Keep it safe:
+  // We'll only auto-jump if approved == true and timeChoice != "—"
+  if(stats.approved && stats.timeChoice && stats.timeChoice !== "—"){
+    showPage(5);
+    renderFinal();
+    startMskClocks();
+  }
 
-    setInterval(()=>{
-        let diff = target - new Date();
-        if(diff<0) diff=0;
-        let d=Math.floor(diff/1000/60/60/24);
-        let h=Math.floor(diff/1000/60/60)%24;
-        let m=Math.floor(diff/1000/60)%60;
-        let s=Math.floor(diff/1000)%60;
-        h=h<10?"0"+h:h; m=m<10?"0"+m:m; s=s<10?"0"+s:s;
-        document.getElementById("countdown").innerHTML=
-        `До сюрприза осталось:<br>${d}д ${h}ч ${m}м ${s}с`;
-    },1000);
-}
+  /***********************
+   * PAGE 1: Envelope + Typing + Activation
+   ***********************/
+  const envelope = document.getElementById("envelope");
+  const seal = document.getElementById("seal");
+  const typing1 = document.getElementById("typing1");
+  const nameInput = document.getElementById("nameInput");
+  const activateBtn = document.getElementById("activateBtn");
+  const loaderWrap = document.getElementById("loaderWrap");
+  const bar = document.getElementById("bar");
+  const percent = document.getElementById("percent");
+
+  let envOpened = false;
+  seal.addEventListener("click", ()=>{
+    envOpened = !envOpened;
+    envelope.classList.toggle("opened", envOpened);
+    if(envOpened){
+      typeText(typing1, "Персональное приглашение для тебя… 💌");
+      toast("Конверт открыт. Теперь — активация 😉");
+    }else{
+      typing1.innerHTML = "";
+    }
+  });
+
+  function typeText(el, text, speed=24){
+    el.innerHTML = "";
+    const span = document.createElement("span");
+    const cur = document.createElement("span");
+    cur.className="cursor";
+    el.appendChild(span);
+    el.appendChild(cur);
+
+    let i=0;
+    const tick = ()=>{
+      span.textContent = text.slice(0,i);
+      i++;
+      if(i<=text.length) setTimeout(tick, speed);
+      else setTimeout(()=>{ if(cur) cur.remove(); }, 450);
+    };
+    tick();
+  }
+
+  function normalizeName(v){
+    return (v||"")
+      .trim()
+      .toLowerCase()
+      .replace(/\s+/g," ");
+  }
+
+  function isAmina(v){
+    const n = normalizeName(v);
+    // accept common variants
+    return n === "амина" || n === "amina";
+  }
+
+  let activating = false;
+
+  activateBtn.addEventListener("click", async ()=>{
+    if(activating) return;
+
+    const name = nameInput.value;
+    stats.nameTries += 1;
+    stats.nameValue = name ? name.trim() : "—";
+    saveStats(stats);
+
+    if(!envOpened){
+      toast("Сначала нажми на сердечко ❤️");
+      envelope.classList.add("opened");
+      envOpened = true;
+      typeText(typing1, "Персональное приглашение для тебя… 💌");
+      return;
+    }
+
+    if(!name.trim()){
+      toast("Введи имя 🙂");
+      nameInput.focus();
+      return;
+    }
+
+    activating = true;
+    loaderWrap.classList.add("show");
+    typeText(typing1, "Проверяем… ещё чуть-чуть ✨", 22);
+
+    await runLoading();
+
+    if(isAmina(name)){
+      stats.approved = true;
+      saveStats(stats);
+      openSheet("✅ Доступ одобрен 💘", "Амина, всё совпало. Добро пожаловать 🙂");
+      setTimeout(()=>{
+        closeSheet();
+        document.getElementById("helloTitle").textContent = "Амина, ты готова принять его? 💌";
+        showPage(1);
+      }, 1050);
+    }else{
+      stats.approved = false;
+      saveStats(stats);
+      openSheet("⛔ Доступ отказан 😌", "Кажется, это не для тебя. Попробуй ещё раз — правильно введи имя.");
+      loaderWrap.classList.remove("show");
+      bar.style.width = "0%";
+      percent.textContent = "0%";
+      activating = false;
+    }
+  });
+
+  function runLoading(){
+    return new Promise((resolve)=>{
+      let p = 0;
+      percent.textContent = "0%";
+      bar.style.width = "0%";
+      const timer = setInterval(()=>{
+        p += Math.floor(rand(2, 6)); // smooth, visible
+        if(p>100) p=100;
+        bar.style.width = p + "%";
+        percent.textContent = p + "%";
+        if(p===100){
+          clearInterval(timer);
+          setTimeout(resolve, 220);
+        }
+      }, 65);
+    });
+  }
+
+  /***********************
+   * PAGE 2: Yes / No moving + toasts
+   ***********************/
+  const yesBtn = document.getElementById("yesBtn");
+  const noBtn = document.getElementById("noBtn");
+  const arena = document.getElementById("arena");
+
+  const noPhrases = [
+    "Хм… попытка отменить романтику зафиксирована 😌",
+    "Кажется, кто-то притворяется скромной 😏",
+    "А ты настойчивая… но всё равно нужно нажать «Да» 😉"
+  ];
+
+  function moveNoBtn(){
+    const rect = arena.getBoundingClientRect();
+    const bw = 140; // approximate button width
+    const bh = 46;  // approximate height
+    const x = rand(10, Math.max(10, rect.width - bw - 10));
+    const y = rand(10, Math.max(10, rect.height - bh - 10));
+    noBtn.style.left = x + "px";
+    noBtn.style.top  = y + "px";
+    noBtn.style.transform = "translateX(0)";
+  }
+
+  // initial position
+  setTimeout(()=>{ moveNoBtn(); }, 50);
+
+  noBtn.addEventListener("click", ()=>{
+    stats.noClicks += 1;
+    saveStats(stats);
+
+    if(stats.noClicks <= 5){
+      moveNoBtn();
+      toast(pick(noPhrases));
+      if(stats.noClicks === 5){
+        openSheet("🙃 Лимит попыток", "Окей… «Нет» уже достаточно. Теперь — нажми «Да» 💘");
+      }
+    }else{
+      toast("Только «Да» 😇");
+      moveNoBtn();
+    }
+  });
+
+  yesBtn.addEventListener("click", ()=>{
+    toast("Принято ✅ Идём дальше…");
+    showPage(2);
+  });
+
+  /***********************
+   * PAGE 3: gift selection + modal
+   ***********************/
+  const giftBtns = Array.from(document.querySelectorAll("#p3 .btn[data-gift]"));
+  const to4 = document.getElementById("to4");
+
+  function setEnabled(btn, enabled){
+    btn.disabled = !enabled;
+    btn.style.opacity = enabled ? "1" : ".6";
+  }
+
+  giftBtns.forEach(b=>{
+    b.addEventListener("click", ()=>{
+      giftBtns.forEach(x=>x.classList.remove("primary"));
+      b.classList.add("primary");
+
+      stats.giftChoice = b.getAttribute("data-gift");
+      saveStats(stats);
+
+      openSheet("💝 Выбор принят", b.getAttribute("data-modal"));
+      setEnabled(to4, true);
+    });
+  });
+
+  to4.addEventListener("click", ()=>{
+    showPage(3);
+  });
+
+  /***********************
+   * PAGE 4: delivery
+   ***********************/
+  const deliveryBtn = document.getElementById("deliveryBtn");
+  const to5 = document.getElementById("to5");
+
+  deliveryBtn.addEventListener("click", ()=>{
+    deliveryBtn.classList.add("primary");
+    stats.delivery = "Лично";
+    saveStats(stats);
+    openSheet("🚚 Способ выбран", "Лично — звучит правильно 🤍");
+    setEnabled(to5, true);
+  });
+
+  to5.addEventListener("click", ()=>{
+    showPage(4);
+  });
+
+  /***********************
+   * PAGE 5: time choice
+   ***********************/
+  const times = document.getElementById("times");
+  const to6 = document.getElementById("to6");
+
+  Array.from(times.querySelectorAll(".btn")).forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      Array.from(times.querySelectorAll(".btn")).forEach(x=>x.classList.remove("primary"));
+      btn.classList.add("primary");
+
+      stats.timeChoice = btn.getAttribute("data-time");
+      saveStats(stats);
+
+      openSheet("⏰ Время принято", "Окей. Я запомнил 🙂");
+      setEnabled(to6, true);
+    });
+  });
+
+  to6.addEventListener("click", ()=>{
+    showPage(5);
+    renderFinal();
+    startMskClocks();
+  });
+
+  /***********************
+   * PAGE 6: final stats + MSK time + countdown
+   ***********************/
+  const statsBox = document.getElementById("stats");
+  const mskNow = document.getElementById("mskNow");
+  const countdown = document.getElementById("countdown");
+  const targetHint = document.getElementById("targetHint");
+  const copyStatsBtn = document.getElementById("copyStats");
+
+  function renderFinal(){
+    // Ensure placeholders
+    const s = loadStats();
+    stats = s;
+
+    statsBox.innerHTML = `
+      <p>💌 Попыток ввода имени: <b>${s.nameTries}</b></p>
+      <p>🎁 Подарок: <b>${escapeHtml(s.giftChoice)}</b></p>
+      <p>🚚 Способ: <b>${escapeHtml(s.delivery)}</b></p>
+      <p>⏰ Время: <b>${escapeHtml(s.timeChoice)}</b></p>
+      <p>🙃 Нажатий «НЕТ»: <b>${s.noClicks}</b></p>
+    `;
+
+    const timeStr = (s.timeChoice && s.timeChoice !== "—") ? s.timeChoice : "—";
+    targetHint.textContent = `14 февраля, ${timeStr} (МСК)`;
+  }
+
+  function escapeHtml(str){
+    return String(str ?? "")
+      .replaceAll("&","&amp;")
+      .replaceAll("<","&lt;")
+      .replaceAll(">","&gt;")
+      .replaceAll('"',"&quot;")
+      .replaceAll("'","&#039;");
+  }
+
+  function getMskDate(){
+    // Construct a Date object representing "now" in MSK (+03:00) without relying on local TZ.
+    // We use Intl to format parts in Europe/Moscow, then rebuild.
+    const parts = new Intl.DateTimeFormat("ru-RU", {
+      timeZone: "Europe/Moscow",
+      year:"numeric", month:"2-digit", day:"2-digit",
+      hour:"2-digit", minute:"2-digit", second:"2-digit",
+      hour12:false
+    }).formatToParts(new Date());
+
+    const get = (type)=>parts.find(p=>p.type===type)?.value ?? "00";
+    const y = get("year");
+    const mo = get("month");
+    const d = get("day");
+    const h = get("hour");
+    const mi = get("minute");
+    const se = get("second");
+
+    // This Date is in local tz, but represents the same wall-clock components of MSK.
+    // We'll use it consistently for display + diff by also building target the same way.
+    return { y:+y, mo:+mo, d:+d, h:+h, mi:+mi, se:+se };
+  }
+
+  function buildMskLikeLocal(year, month, day, hh, mm, ss){
+    // Build a local Date from explicit components (interpreted in local tz),
+    // but since both "now" and "target" are built this way from MSK components,
+    // the difference (target - now) remains correct.
+    return new Date(year, month-1, day, hh, mm, ss, 0);
+  }
+
+  let clockTimer = null;
+  function startMskClocks(){
+    if(clockTimer) return;
+
+    const tick = ()=>{
+      const nowP = getMskDate();
+      const now = buildMskLikeLocal(nowP.y, nowP.mo, nowP.d, nowP.h, nowP.mi, nowP.se);
+
+      mskNow.textContent = `${String(nowP.d).padStart(2,"0")}.${String(nowP.mo).padStart(2,"0")}.${nowP.y}  ${String(nowP.h).padStart(2,"0")}:${String(nowP.mi).padStart(2,"0")}:${String(nowP.se).padStart(2,"0")}`;
+
+      const time = (stats.timeChoice && stats.timeChoice !== "—") ? stats.timeChoice : "00:00";
+      const [th, tm] = time.split(":").map(n=>parseInt(n,10));
+      let targetYear = nowP.y;
+
+      // target is Feb 14 at chosen time (MSK). If already past, move to next year.
+      let target = buildMskLikeLocal(targetYear, 2, 14, (th||0), (tm||0), 0);
+      if(target.getTime() < now.getTime()){
+        targetYear += 1;
+        target = buildMskLikeLocal(targetYear, 2, 14, (th||0), (tm||0), 0);
+      }
+
+      const diff = Math.max(0, target.getTime() - now.getTime());
+      const totalSec = Math.floor(diff/1000);
+
+      const dd = Math.floor(totalSec / 86400);
+      const hh = Math.floor((totalSec % 86400) / 3600);
+      const mm = Math.floor((totalSec % 3600) / 60);
+      const ss = totalSec % 60;
+
+      countdown.textContent = `${dd}д ${String(hh).padStart(2,"0")}ч ${String(mm).padStart(2,"0")}м ${String(ss).padStart(2,"0")}с`;
+      targetHint.textContent = `14 февраля ${String(th||0).padStart(2,"0")}:${String(tm||0).padStart(2,"0")} (МСК)`;
+
+      // Keep approved status
+      stats.approved = true;
+      saveStats(stats);
+    };
+
+    tick();
+    clockTimer = setInterval(tick, 1000);
+  }
+
+  copyStatsBtn.addEventListener("click", async ()=>{
+    const s = loadStats();
+    const text =
+`💌 Попыток ввода имени: ${s.nameTries}
+🎁 Подарок: ${s.giftChoice}
+🚚 Способ: ${s.delivery}
+⏰ Время: ${s.timeChoice}
+🙃 Нажатий «НЕТ»: ${s.noClicks}`;
+    try{
+      await navigator.clipboard.writeText(text);
+      toast("Скопировано ✅");
+    }catch(e){
+      openSheet("📋 Не удалось скопировать", "Скопируй вручную — возможно, браузер запретил доступ к буферу обмена.");
+    }
+  });
+
+  /***********************
+   * Little UX: Enter to activate
+   ***********************/
+  nameInput.addEventListener("keydown",(e)=>{
+    if(e.key==="Enter") activateBtn.click();
+  });
+
+  /***********************
+   * Safety: if user returns to page 2, keep noBtn inside
+   ***********************/
+  window.addEventListener("resize", ()=>{
+    if(document.getElementById("p2").classList.contains("show")){
+      moveNoBtn();
+    }
+  });
+
+  // Initial typing hint
+  setTimeout(()=>typeText(typing1, "Нажми на сердечко, чтобы открыть конверт ❤️", 22), 260);
 </script>
+
 </body>
 </html>
