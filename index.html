@@ -3,160 +3,367 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Персональное приглашение</title>
+<title>Сюрприз для Амины</title>
 <style>
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,sans-serif;
-background:linear-gradient(180deg,#fff,#ffe6f0,#ffd6e7);
-color:#a1003c;
-display:flex;
-justify-content:center;
-align-items:center;
-height:100vh;
-overflow:hidden;
+body {
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    overflow:hidden;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(180deg,#fff,#ffe6f0,#ffd6e7);
+    position:relative;
 }
-.container{
-text-align:center;
-width:90%;
-max-width:400px;
+
+.container {
+    text-align:center;
+    width:90%;
+    max-width:400px;
+    z-index:2;
 }
+
 h1,h2,p{margin:15px 0;}
 button{
-padding:12px 20px;
-border:none;
-border-radius:25px;
-background:#ff4d88;
-color:white;
-font-size:16px;
-margin:10px;
-cursor:pointer;
-transition:0.3s;
+    padding:12px 20px;
+    border:none;
+    border-radius:25px;
+    background:#ff4d88;
+    color:white;
+    font-size:16px;
+    margin:10px;
+    cursor:pointer;
+    font-weight:bold;
+    transition:0.3s;
 }
-button:hover{opacity:0.8;}
-.hidden{display:none;}
+button:hover{opacity:0.85;}
 input{
-padding:10px;
-border-radius:20px;
-border:1px solid #ff99bb;
-text-align:center;
-font-size:16px;
+    padding:10px;
+    border-radius:20px;
+    border:1px solid #ff99bb;
+    text-align:center;
+    font-size:16px;
 }
 .card{
-background:white;
-padding:15px;
-border-radius:15px;
-margin:10px 0;
-cursor:pointer;
-transition:0.3s;
+    background:white;
+    padding:15px;
+    border-radius:15px;
+    margin:10px 0;
+    cursor:pointer;
+    transition:0.3s;
 }
 .card:hover{transform:scale(1.05);}
-.fade{
-position:fixed;
-top:0;left:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.7);
-color:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
+
+.hidden{display:none !important;}
+
+/* Модальное окно */
+.modal{
+    position:fixed;
+    top:20%;
+    left:50%;
+    transform:translateX(-50%);
+    background:white;
+    color:#a1003c;
+    padding:18px 25px;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(0,0,0,0.4);
+    font-weight:bold;
+    display:none;
+    z-index:2000;
+    max-width:300px;
+    text-align:center;
+    font-size:16px;
 }
-#noBtn{position:relative;}
+
+/* Загрузка */
+#loader{
+    width:90%;
+    height:40px;
+    background:#ffe6f0;
+    border-radius:25px;
+    overflow:hidden;
+    margin:25px auto;
+    box-shadow:0 0 10px rgba(0,0,0,0.1) inset;
+    position:relative;
+    font-size:16px;
+    font-weight:bold;
+    color:#a1003c;
+}
+#loaderBar{
+    height:100%;
+    width:0;
+    background:linear-gradient(90deg,#ff4d88,#ff85b1,#ffc0da);
+    border-radius:25px;
+    box-shadow:0 0 8px rgba(255,77,136,0.7);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    font-weight:bold;
+    transition: width 0.15s ease;
+}
+
+/* Плавающие символы фона */
+.floating-symbol{
+    position:absolute;
+    pointer-events:none;
+    user-select:none;
+    animation-name:floatSymbol;
+    animation-timing-function: linear;
+    z-index:0;
+}
+@keyframes floatSymbol{
+    0%{transform:translateY(100vh);}
+    100%{transform:translateY(-50px);}
+}
+
+/* Финальная страница */
+#final{
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    color:#a1003c;
+    background:linear-gradient(180deg,#fff,#ffe6f0,#ffd6e7);
+    width:100%;
+    height:100%;
+    padding:20px;
+    font-weight:bold;
+    z-index:2;
+}
+
+#final h2{font-size:32px; margin-bottom:15px; color:#ff4d88;}
+
+#sendNote{
+    font-size:22px;
+    margin-bottom:15px;
+    color:#ff1a70;
+    text-shadow: 0 0 5px #ffc0da;
+}
+
+#stats{
+    background:rgba(255,77,136,0.1);
+    padding:20px;
+    border-radius:25px;
+    text-align:left;
+    width:90%;
+    max-width:400px;
+    margin-top:10px;
+    box-shadow:0 4px 15px rgba(255,77,136,0.3);
+}
+#stats p{
+    margin:8px 0;
+    font-size:18px;
+}
+
+/* Таймер отдельный блок */
+#countdown{
+    margin-top:20px;
+    font-size:20px;
+    font-weight:bold;
+    color:#ff1a70;
+    background:white;
+    padding:15px 25px;
+    border-radius:20px;
+    box-shadow:0 0 15px rgba(255,77,136,0.4);
+    text-align:center;
+    width:90%;
+    max-width:300px;
+}
 </style>
 </head>
 <body>
 
+<!-- Плавающие символы -->
+<script>
+const symbols=["❤️","🤍","🌸","🎈","🌹"];
+for(let i=0;i<20;i++){
+    const span=document.createElement("span");
+    span.className="floating-symbol";
+    span.innerText=symbols[Math.floor(Math.random()*symbols.length)];
+    let size=10+Math.random()*30;
+    span.style.fontSize=size+"px";
+    span.style.left=Math.random()*100+"%";
+    span.style.animationDuration=(10+Math.random()*20)+"s";
+    span.style.opacity=Math.random()*0.8+0.2;
+    document.body.appendChild(span);
+}
+</script>
+
+<!-- Страница 1 -->
 <div class="container" id="page1">
-<h1>Персональное приглашение</h1>
-<p>Введите ваше имя чтобы активировать</p>
-<input type="text" id="nameInput" placeholder="Ваше имя">
-<br>
-<button onclick="checkName()">Активировать</button>
-<p id="nameError"></p>
+<h1>Персональное приглашение 💌</h1>
+<p>Введите ваше имя чтобы активировать:</p>
+<input type="text" id="nameInput" placeholder="Ваше имя"><br>
+<button onclick="startLoading()">Активировать</button>
+<div id="loader" class="hidden"><div id="loaderBar">Проверка получателя…</div></div>
 </div>
 
+<!-- Страница 2 -->
 <div class="container hidden" id="page2">
 <h2>Амина, ты готова принять его?</h2>
 <button onclick="nextPage()">ДА 💌</button>
 <button id="noBtn" onclick="moveNo()">НЕТ 🙃</button>
-<p id="noText"></p>
 </div>
 
+<!-- Страница 3 -->
 <div class="container hidden" id="page3">
 <h2>В каком формате сегодня проявить внимание к тебе?</h2>
-<div class="card" onclick="selectGift()">🌹 Цветы</div>
-<div class="card" onclick="selectGift()">🍭 Сладкий букет</div>
-<div class="card" onclick="selectGift()">🍓 Сладкая корзина</div>
-<div class="card" onclick="selectGift()">✨ Секретный</div>
-<p style="font-size:13px;">Секретный будет в любом случае. Я лишь уточняю детали 😉</p>
+<div class="card" onclick="selectGift('🌹 Цветы')">🌹 Цветы</div>
+<div class="card" onclick="selectGift('🍭 Сладкий букет')">🍭 Сладкий букет</div>
+<div class="card" onclick="selectGift('🍓 Сладкая корзина')">🍓 Сладкая корзина</div>
+<div class="card" onclick="selectGift('✨ Секретный')">✨ Секретный</div>
 </div>
 
+<!-- Страница 4 -->
 <div class="container hidden" id="page4">
-<h2>Во сколько ты будешь готова его принять?</h2>
-<button onclick="confirmTime()">17:00</button>
-<button onclick="confirmTime()">18:00</button>
-<button onclick="confirmTime()">19:00</button>
+<h2>Выберите способ получения</h2>
+<div class="card" onclick="nextTime()">Лично</div>
 </div>
 
-<div class="hidden fade" id="final">
-<h2>Подтверждено.</h2>
-<p>Синхронизация запущена.</p>
-<p id="timer"></p>
+<!-- Страница 5 -->
+<div class="container hidden" id="page5">
+<h2>Во сколько будешь готова принять сюрприз?</h2>
+<button onclick="confirmTime('17:00')">17:00</button>
+<button onclick="confirmTime('18:00')">18:00</button>
+<button onclick="confirmTime('19:00')">19:00</button>
 </div>
+
+<!-- Финальная страница -->
+<div id="final" class="fade hidden">
+<h2>Подтверждено ✅</h2>
+<div id="sendNote">Отправьте скриншот получателю 📸</div>
+<div id="stats"></div>
+<div id="countdown"></div>
+</div>
+
+<!-- Модальное окно -->
+<div class="modal" id="modal"></div>
 
 <script>
+let stats = {nameTries:0,giftChoice:"",delivery:"",timeChoice:"",noClicks:0};
 let noCount=0;
+
+// Модальное окно
+function showModal(text){
+    const modal=document.getElementById("modal");
+    modal.innerHTML=text;
+    modal.style.display='block';
+    setTimeout(()=>{modal.style.display='none';},1800);
+}
+
+// Загрузка 0-100
+function startLoading(){
+    stats.nameTries++;
+    const loader=document.getElementById("loader");
+    const bar=document.getElementById("loaderBar");
+    loader.classList.remove("hidden");
+    let width=0;
+    bar.innerText="Проверка получателя…";
+    let interval=setInterval(()=>{
+        width += Math.random()*6 + 2;
+        if(width>=100){
+            width=100;
+            clearInterval(interval);
+            setTimeout(()=>{
+                loader.classList.add("hidden");
+                checkName();
+            },300);
+        }
+        bar.style.width = width+"%";
+        bar.innerText = `Проверка получателя… ${Math.floor(width)}%`;
+    },50);
+}
+
+// Проверка имени
 function checkName(){
-let name=document.getElementById("nameInput").value.trim().toLowerCase();
-if(name==="амина"){
-document.getElementById("page1").classList.add("hidden");
-document.getElementById("page2").classList.remove("hidden");
-}else{
-document.getElementById("nameError").innerText="Доступ закрыт. Попробуйте снова.";
+    let name=document.getElementById("nameInput").value.trim().toLowerCase();
+    if(name==="амина"){
+        showModal("Доступ открыт 🎉");
+        setTimeout(()=>{
+            document.getElementById("page1").classList.add("hidden");
+            document.getElementById("page2").classList.remove("hidden");
+        },1000);
+    } else{
+        showModal("Доступ закрыт ❌ Попробуйте снова");
+    }
 }
-}
+
+// Страница 2
 function nextPage(){
-document.getElementById("page2").classList.add("hidden");
-document.getElementById("page3").classList.remove("hidden");
+    document.getElementById("page2").classList.add("hidden");
+    document.getElementById("page3").classList.remove("hidden");
 }
 function moveNo(){
-noCount++;
-let texts=[
-"Хм… попытка отменить романтику зафиксирована 😌",
-"Кажется, кто-то притворяется скромной.",
-"Всё равно нажмёшь «Да». Я тебя знаю 😉"
-];
-document.getElementById("noText").innerText=texts[Math.min(noCount-1,2)];
-let btn=document.getElementById("noBtn");
-btn.style.left=Math.random()*100-50+"px";
-btn.style.top=Math.random()*50-25+"px";
+    stats.noClicks++;
+    noCount++;
+    let texts=["Хм… попытка отменить романтику зафиксирована 😌","Кажется, кто-то притворяется скромной 😏","Всё равно нажмёшь «Да» 😉"];
+    showModal(texts[Math.min(noCount-1,2)]);
+    let btn=document.getElementById("noBtn");
+    btn.style.transform="translate("+((Math.random()*300)-150)+"px,"+((Math.random()*100)-50)+"px)";
 }
-function selectGift(){
-document.getElementById("page3").classList.add("hidden");
-document.getElementById("page4").classList.remove("hidden");
+
+// Страница 3
+function selectGift(gift){
+    stats.giftChoice=gift;
+    let modalText="";
+    switch(gift){
+        case "🌹 Цветы": modalText="Классика… но она всегда попадает в сердце 💘"; break;
+        case "🍭 Сладкий букет": modalText="Ммм… два в одном. Красиво и вкусно 😋"; break;
+        case "🍓 Сладкая корзина": modalText="Ооо, ты у нас сладкоежка… принято 🍓✨"; break;
+        case "✨ Секретный": modalText="Немного интриги? Мне нравится твой настрой 😏"; break;
+    }
+    showModal(modalText);
+    setTimeout(()=>{
+        document.getElementById("page3").classList.add("hidden");
+        document.getElementById("page4").classList.remove("hidden");
+    },1800);
 }
-function confirmTime(){
-document.getElementById("page4").classList.add("hidden");
-document.getElementById("final").classList.remove("hidden");
-startTimer(60*60*3); // 3 часа таймер
+
+// Страница 4
+function nextTime(){
+    stats.delivery="Лично";
+    document.getElementById("page4").classList.add("hidden");
+    document.getElementById("page5").classList.remove("hidden");
 }
-function startTimer(duration){
-let timer=duration, hours, minutes, seconds;
-setInterval(function(){
-hours=parseInt(timer/3600,10);
-minutes=parseInt((timer%3600)/60,10);
-seconds=parseInt(timer%60,10);
-hours=hours<10?"0"+hours:hours;
-minutes=minutes<10?"0"+minutes:minutes;
-seconds=seconds<10?"0"+seconds:seconds;
-document.getElementById("timer").textContent="До активации сюрприза осталось: "+hours+":"+minutes+":"+seconds;
-if(--timer<0){timer=0;}
-},1000);
+
+// Страница 5 -> финал
+function confirmTime(time){
+    stats.timeChoice=time;
+    document.getElementById("page5").classList.add("hidden");
+    document.getElementById("final").classList.remove("hidden");
+
+    document.getElementById("stats").innerHTML=`
+<p>💌 Попыток ввода имени: <b>${stats.nameTries}</b></p>
+<p>🎁 Подарок: <b>${stats.giftChoice}</b></p>
+<p>🚚 Способ: <b>${stats.delivery}</b></p>
+<p>⏰ Время: <b>${stats.timeChoice}</b></p>
+<p>🙃 Нажатий «НЕТ»: <b>${stats.noClicks}</b></p>
+`;
+
+    startTimer(stats.timeChoice);
+}
+
+// Таймер до сюрприза
+function startTimer(timeStr){
+    let now = new Date();
+    let year = now.getFullYear();
+    let target = new Date(`${year}-02-14T${timeStr}:00+03:00`);
+    if(now>target) target.setFullYear(year+1);
+
+    setInterval(()=>{
+        let diff = target - new Date();
+        if(diff<0) diff=0;
+        let d=Math.floor(diff/1000/60/60/24);
+        let h=Math.floor(diff/1000/60/60)%24;
+        let m=Math.floor(diff/1000/60)%60;
+        let s=Math.floor(diff/1000)%60;
+        h=h<10?"0"+h:h; m=m<10?"0"+m:m; s=s<10?"0"+s:s;
+        document.getElementById("countdown").innerHTML=
+        `До сюрприза осталось:<br>${d}д ${h}ч ${m}м ${s}с`;
+    },1000);
 }
 </script>
-
 </body>
 </html>
