@@ -718,41 +718,39 @@
       display:flex;
       align-items:center;
       justify-content:center;
-      transform-origin:50% 0;
-      transition:transform .25s ease;
-      will-change:transform;
     }
 
     .ll-lamp{
       position:relative;
-      width:180px;
-      height:210px;
+      width:196px;
+      height:228px;
+      filter:drop-shadow(0 18px 28px rgba(0,0,0,.16));
     }
 
     .ll-glow{
       position:absolute;
       left:50%;
-      top:52px;
-      width:340px;
-      height:340px;
+      top:42px;
+      width:352px;
+      height:352px;
       transform:translateX(-50%);
       background:
-        radial-gradient(circle, rgba(255,228,244,.82) 0%, rgba(255,189,220,.46) 23%, rgba(255,150,196,.24) 38%, rgba(255,135,185,.08) 56%, rgba(255,135,185,0) 72%);
+        radial-gradient(circle, rgba(255,228,244,.88) 0%, rgba(255,195,226,.52) 24%, rgba(255,160,204,.26) 40%, rgba(255,138,190,.1) 58%, rgba(255,135,185,0) 74%);
       opacity:0;
-      filter:blur(12px);
-      transition:opacity .5s ease, transform .6s ease;
+      filter:blur(14px);
+      transition:opacity .5s ease;
       pointer-events:none;
     }
 
     .ll-beam{
       position:absolute;
       left:50%;
-      top:88px;
+      top:94px;
       width:420px;
-      height:440px;
+      height:430px;
       transform:translateX(-50%);
-      background:conic-gradient(from 180deg at 50% 0%, rgba(255,186,221,0) 0deg, rgba(255,215,236,.08) 18deg, rgba(255,234,245,.72) 42deg, rgba(255,215,236,.08) 66deg, rgba(255,186,221,0) 84deg);
-      clip-path:polygon(48% 0%, 52% 0%, 90% 100%, 10% 100%);
+      background:conic-gradient(from 180deg at 50% 0%, rgba(255,186,221,0) 0deg, rgba(255,221,239,.1) 18deg, rgba(255,241,247,.76) 42deg, rgba(255,221,239,.1) 66deg, rgba(255,186,221,0) 84deg);
+      clip-path:polygon(49% 0%, 51% 0%, 88% 100%, 12% 100%);
       opacity:0;
       filter:blur(6px);
       transition:opacity .55s ease;
@@ -763,13 +761,13 @@
       position:absolute;
       bottom:18px;
       left:50%;
-      width:300px;
-      height:54px;
+      width:310px;
+      height:58px;
       transform:translateX(-50%);
       border-radius:999px;
-      background:radial-gradient(circle, rgba(255,198,227,.5), rgba(255,198,227,0) 72%);
+      background:radial-gradient(circle, rgba(255,198,227,.56), rgba(255,198,227,0) 72%);
       opacity:0;
-      filter:blur(10px);
+      filter:blur(11px);
       transition:opacity .5s ease;
       pointer-events:none;
     }
@@ -777,62 +775,83 @@
     .ll-shade{
       position:absolute;
       left:50%;
-      top:0;
-      width:140px;
-      height:78px;
+      top:2px;
+      width:150px;
+      height:88px;
       transform:translateX(-50%);
-      border-radius:74px 74px 16px 16px;
-      background:
-        linear-gradient(180deg, #ffd2e6 0%, #ff9ec8 52%, #f96bad 100%);
+      border-radius:82px 82px 22px 22px;
+      background:linear-gradient(180deg, #ffe1ef 0%, #ffb9d8 38%, #ff86bd 72%, #ff6fb1 100%);
       box-shadow:
-        inset 0 6px 12px rgba(255,255,255,.34),
-        inset 0 -10px 18px rgba(167,30,93,.26),
-        0 12px 22px rgba(0,0,0,.15);
+        inset 0 10px 18px rgba(255,255,255,.56),
+        inset 0 -12px 18px rgba(173,34,99,.18),
+        0 10px 18px rgba(0,0,0,.12);
+      overflow:visible;
     }
 
     .ll-shade::before{
       content:"";
       position:absolute;
-      left:10px;
-      right:10px;
+      left:16px;
+      right:16px;
       top:8px;
-      height:20px;
+      height:24px;
       border-radius:999px;
-      background:linear-gradient(180deg, rgba(255,255,255,.65), rgba(255,255,255,0));
-      opacity:.85;
+      background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,0));
+      opacity:.95;
+    }
+
+    .ll-shade::after{
+      content:"❤";
+      position:absolute;
+      left:50%;
+      top:24px;
+      transform:translateX(-50%);
+      font-size:18px;
+      line-height:1;
+      color:rgba(255,255,255,.92);
+      text-shadow:0 4px 10px rgba(255,105,165,.35);
     }
 
     .ll-neck{
       position:absolute;
       left:50%;
-      top:68px;
-      width:18px;
-      height:98px;
+      top:82px;
+      width:22px;
+      height:130px;
       transform:translateX(-50%);
-      border-radius:20px;
-      background:linear-gradient(180deg, #ffd8e8 0%, #ffb6d3 60%, #ff8bbc 100%);
-      box-shadow: inset 0 1px 1px rgba(255,255,255,.4);
+      border-radius:24px;
+      background:linear-gradient(180deg, #ffe3f0 0%, #ffc7df 56%, #ff9cc6 100%);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,.58);
     }
 
     .ll-base{
       position:absolute;
       left:50%;
-      bottom:16px;
-      width:92px;
-      height:16px;
+      bottom:10px;
+      width:104px;
+      height:20px;
       transform:translateX(-50%);
       border-radius:999px;
-      background:linear-gradient(180deg, #ffd2e6 0%, #ff93c0 100%);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,.45), 0 8px 18px rgba(0,0,0,.18);
+      background:linear-gradient(180deg, #ffe1ef 0%, #ffb2d4 100%);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,.6), 0 8px 16px rgba(0,0,0,.14);
+    }
+
+    .ll-base::before{
+      content:"";
+      position:absolute;
+      inset:-6px -10px;
+      border-radius:999px;
+      background:radial-gradient(circle at 50% 50%, rgba(255,255,255,.16), rgba(255,255,255,0) 70%);
+      z-index:-1;
     }
 
     .ll-cord-wrap{
       position:absolute;
       left:50%;
-      top:56px;
-      width:100px;
-      height:142px;
-      transform:translateX(22px);
+      top:58px;
+      width:86px;
+      height:150px;
+      transform:translateX(30px);
       overflow:visible;
     }
 
@@ -840,24 +859,24 @@
       position:absolute;
       left:50%;
       top:0;
-      width:2px;
-      height:82px;
+      width:3px;
+      height:84px;
       transform:translateX(-50%);
-      background:linear-gradient(180deg, rgba(255,230,241,.9), rgba(248,169,204,.95));
+      background:linear-gradient(180deg, rgba(255,235,244,.98), rgba(255,185,214,.98));
+      border-radius:999px;
       box-shadow:0 0 8px rgba(255,191,220,.24);
-      transform-origin:top center;
     }
 
     .ll-knob{
       position:absolute;
       left:50%;
-      top:78px;
-      width:18px;
-      height:18px;
+      top:80px;
+      width:24px;
+      height:24px;
       transform:translateX(-50%);
       border-radius:50%;
-      background:radial-gradient(circle at 30% 30%, #fff6dd 0%, #ffd79a 36%, #e8a755 100%);
-      box-shadow:0 6px 16px rgba(0,0,0,.22), inset 0 1px 1px rgba(255,255,255,.45);
+      background:radial-gradient(circle at 35% 30%, #fff9e8 0%, #ffe0a9 38%, #efb25e 100%);
+      box-shadow:0 8px 18px rgba(0,0,0,.2), inset 0 1px 1px rgba(255,255,255,.55);
       cursor:grab;
       touch-action:none;
     }
@@ -1364,12 +1383,10 @@
       let pointerId = null;
       let startY = 0;
       let currentPull = 0;
-      let currentX = 0;
       let audioCtx = null;
 
       const MAX_PULL = 62;
       const TRIGGER_PULL = 42;
-      const MAX_SWING = 16;
 
       function ensureAudio() {
         if (!audioCtx) {
@@ -1415,28 +1432,25 @@
         setTimeout(() => playTone(920, 0.15, 'sine', 0.02), 130);
       }
 
-      function updateCord(pull, sideOffset) {
+      function updateCord(pull) {
         const safePull = Math.max(0, Math.min(MAX_PULL, pull));
-        const swing = Math.max(-MAX_SWING, Math.min(MAX_SWING, sideOffset * 0.22));
-        cord.style.height = `${82 + safePull}px`;
-        cord.style.transform = `translateX(-50%) rotate(${swing}deg)`;
-        knob.style.transform = `translateX(calc(-50% + ${sideOffset * 0.18}px)) translateY(${safePull}px)`;
-        lampWrap.style.transform = `rotate(${(-swing * 0.28).toFixed(2)}deg)`;
+        cord.style.height = `${84 + safePull}px`;
+        cord.style.transform = 'translateX(-50%)';
+        knob.style.transform = `translateX(-50%) translateY(${safePull}px)`;
+        lampWrap.style.transform = 'none';
         card.classList.toggle('ll-ready', safePull > 12);
         if (!isTriggered && safePull > 8) playPullSound();
       }
 
       function releaseCord(animated = true) {
         const startPull = currentPull;
-        const startX = currentX;
         const start = performance.now();
 
         function step(now) {
           const t = Math.min(1, (now - start) / (animated ? 320 : 1));
           const ease = 1 - Math.pow(1 - t, 3);
           currentPull = startPull * (1 - ease);
-          currentX = startX * (1 - ease);
-          updateCord(currentPull, currentX);
+          updateCord(currentPull);
           if (t < 1) requestAnimationFrame(step);
         }
         requestAnimationFrame(step);
@@ -1475,10 +1489,7 @@
       function onPointerMove(e) {
         if (!isDragging || e.pointerId !== pointerId || isTriggered) return;
         currentPull = Math.max(0, Math.min(MAX_PULL, e.clientY - startY));
-        const lampBox = lampWrap.getBoundingClientRect();
-        const centerX = lampBox.left + lampBox.width / 2;
-        currentX = e.clientX - centerX;
-        updateCord(currentPull, currentX);
+        updateCord(currentPull);
         if (hint && currentPull > 18) {
           hint.textContent = currentPull >= TRIGGER_PULL ? 'Ещё чуть-чуть 💡' : 'Тяни ниже ✨';
         }
@@ -1491,7 +1502,7 @@
         pointerId = null;
 
         if (currentPull >= TRIGGER_PULL) {
-          updateCord(MAX_PULL, currentX * 0.5);
+          updateCord(MAX_PULL);
           setTimeout(openSite, 70);
         } else {
           if (hint) hint.textContent = 'Потяни вниз — лампа зажжётся и откроет сюрприз ✨';
@@ -1509,13 +1520,12 @@
           e.preventDefault();
           if (isTriggered) return;
           currentPull = MAX_PULL;
-          currentX = 0;
-          updateCord(currentPull, currentX);
+          updateCord(currentPull);
           setTimeout(openSite, 60);
         }
       });
 
-      updateCord(0, 0);
+      updateCord(0);
     })();
   </script>
 
